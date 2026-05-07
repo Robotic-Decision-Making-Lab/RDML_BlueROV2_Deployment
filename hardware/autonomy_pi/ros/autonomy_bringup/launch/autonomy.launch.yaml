@@ -1,0 +1,37 @@
+launch:
+  - let:
+      name: description_file
+      value: $(find-pkg-share autonomy_description)/description/config.xacro
+
+  - let:
+      name: robot_description
+      value: $(command 'xacro $(var description_file)')
+
+  - let:
+      name: ekf_file
+      value: $(find-pkg-share autonomy_description)/config/ekf.yaml
+
+  - let:
+      name: dvl_file
+      value: $(find-pkg-share nucleus_driver)/config/dvl.yaml
+
+  - node:
+      pkg: robot_state_publisher
+      exec: robot_state_publisher
+      param:
+        - name: robot_description
+          value: $(var robot_description)
+
+  - node:
+      pkg: robot_localization
+      exec: ekf_node
+      output: screen
+      name: vehicle_ekf
+      param:
+        - from: $(var ekf_file)
+      remap:
+        - from: /odometry/filtered
+          to: /vehicle/odometry/filtered
+
+  - include:
+      file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py

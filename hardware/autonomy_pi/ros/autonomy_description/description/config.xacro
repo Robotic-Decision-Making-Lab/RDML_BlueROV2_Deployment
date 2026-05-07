@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot name="bluerov2" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find autonomy_description)/description/urdf/bluerov2.urdf.xacro" />
+  <xacro:include filename="$(find autonomy_description)/description/ros2_control/ros2_control.xacro" />
+
+  <xacro:arg name="prefix" default="" />
+  <xacro:arg name="controllers_file" default="$(find autonomy_description)/config/controllers.yaml" />
+
+  <xacro:bluerov2_urdf prefix="$(arg prefix)" />
+  <xacro:bluerov2_system prefix="$(arg prefix)" />
+
+</robot>
