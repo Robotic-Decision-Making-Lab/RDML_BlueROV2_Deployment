@@ -1,0 +1,4 @@
+launch:
+  - let:
+      name: mavros_file
+      value: $(find-pkg-share bluerov_description)/config/mavros.yaml

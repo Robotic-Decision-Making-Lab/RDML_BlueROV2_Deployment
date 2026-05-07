@@ -1,0 +1,25 @@
+repositories:
+  reach:
+    type: git
+    url: https://github.com/Robotic-Decision-Making-Lab/reach.git
+    version: main
+
+  hydrodynamics:
+    type: git
+    url: https://github.com/Robotic-Decision-Making-Lab/hydrodynamics.git
+    version: main
+
+  auv_controllers:
+    type: git
+    url: https://github.com/Robotic-Decision-Making-Lab/auv_controllers.git
+    version: main
+
+  bme680:
+    type: git
+    url: https://github.com/Robotic-Decision-Making-Lab/bme680.git
+    version: main
+
+  nortek_dvl:
+    type: git
+    url: https://github.com/Robotic-Decision-Making-Lab/nortek_dvl.git
+    version: main
