@@ -1,0 +1,12 @@
+services:
+  ros:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    # uncomment the following for interactive mode
+    command: tail -f /dev/null
+
+  mavros:
+    extends: ros
+    command: ros2 run mavros mavros_node --ros-args --params-file /home/ubuntu/mavros.yaml
