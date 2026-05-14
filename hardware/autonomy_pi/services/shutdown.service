@@ -1,0 +1,13 @@
+[Unit]
+Description=Monitor power on the X1203 and shutdown on power loss
+After=multi-user.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 10
+ExecStart=/usr/local/bin/pld_monitor
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

@@ -5,10 +5,10 @@ Requires=docker.service
 
 [Service]
 Type=oneshot
-ExecStartPre=/home/pi/bluerov-deployment/bluerov-pi/scripts/wait_for_core.sh
+ExecStartPre=/home/pi/RDML_BlueROV2_Deployment/hardware/bluerov_pi/scripts/wait_for_core.sh
 RemainAfterExit=yes
-ExecStart=/bin/bash -c "docker compose -f /home/pi/bluerov-deployment/bluerov-pi/.docker/docker-compose.yml up --detach"
-ExecStop=/bin/bash -c "docker compose -f /home/pi/bluerov-deployment/bluerov-pi/.docker/docker-compose.yml stop"
+ExecStart=/bin/bash -c "docker compose -f /home/pi/RDML_BlueROV2_Deployment/hardware/bluerov_pi/docker/docker-compose.yml up --detach"
+ExecStop=/bin/bash -c "docker compose -f /home/pi/RDML_BlueROV2_Deployment/hardware/bluerov_pi/docker/docker-compose.yml stop"
 
 [Install]
 WantedBy=multi-user.target
