@@ -35,3 +35,6 @@ launch:
 
   - include:
       file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
+
+  - include:
+      file: $(find-pkg-share autonomy_bringup)/launch/tf.launch.yaml
