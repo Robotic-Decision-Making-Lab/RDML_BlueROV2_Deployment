@@ -1,4 +1,7 @@
 launch:
+  # this launches some static transforms that we need for state estimation, that aren't otherwise
+  # described in our XACRO files.
+
   - arg:
       name: prefix
       default: ""
