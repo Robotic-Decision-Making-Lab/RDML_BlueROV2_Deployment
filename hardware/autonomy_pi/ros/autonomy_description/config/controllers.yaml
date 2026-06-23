@@ -80,7 +80,6 @@ thruster_allocation_matrix_controller:
       - thruster7_controller
       - thruster8_controller
 
-    # the TAM is defined in the FLU frame to be consistent with the rest of ROS
     tam:
       x: [0.707, 0.707, 0.707, 0.707, 0.0, 0.0, 0.0, 0.0]
       y: [0.707, -0.707, -0.707, 0.707, 0.0, 0.0, 0.0, 0.0]
