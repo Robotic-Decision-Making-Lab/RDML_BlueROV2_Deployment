@@ -20,8 +20,6 @@
 
     <link name="${prefix}dvl_link" />
 
-    <link name="${prefix}locator_link" />
-
     <link name="${prefix}bno08x" />
 
     <link name="${prefix}bar30" />
