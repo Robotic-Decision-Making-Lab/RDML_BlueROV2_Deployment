@@ -8,16 +8,16 @@ vehicle_ekf:
         base_link_frame: base_link
         world_frame: odom
 
-        odom0: /nucleus_driver/odom
-        odom0_config: [true,  true, false,
-                      false, false,  true,
-                       true,  true, false,
-                      false, false, false,
-                      false, false, false]
-        odom0_differential: false
-        odom0_relative: false
-        odom0_queue_size: 2
-        odom0_nodelay: true
+        twist0: /nucleus_driver/twist
+        twist0_config: [false, false, false,
+                        false, false, false,
+                         true,  true, false,
+                        false, false, false,
+                        false, false, false]
+        twist0_differential: false
+        twist0_relative: false
+        twist0_queue_size: 2
+        twist0_nodelay: true
 
         pose0: /bar30/depth
         pose0_config: [false, false,  true,
@@ -32,7 +32,7 @@ vehicle_ekf:
 
         imu0: /bno08x/imu
         imu0_config: [false, false, false,
-                       true,  true, false,
+                       true,  true,  true,
                       false, false, false,
                        true,  true,  true,
                       false, false, false]

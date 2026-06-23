@@ -2,6 +2,7 @@ controller_coordinator:
   ros__parameters:
     hardware_interfaces:
       - thruster_control_system
+
     controller_sequence:
       - thruster1_controller
       - thruster2_controller
