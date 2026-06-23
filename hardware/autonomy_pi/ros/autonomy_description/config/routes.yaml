@@ -1,0 +1,12 @@
+bar30_router:
+  ros__parameters:
+    # MAVROS publishes all incoming MAVLink messages to this topic, including
+    # messages that aren't explicitly converted into their own ROS 2 message.
+    incoming_topic: /uas1/mavlink_source
+
+    # the topic that the router will publish the resulting depth estimates to.
+    # state estimators should use this topic for depth estimation.
+    outgoing_topic: /vehicle/depth
+
+    # the frame ID of the Bar 30 sensor.
+    frame_id: "bar30_link"

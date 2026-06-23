@@ -1,0 +1,28 @@
+nucleus_driver_node:
+  ros__parameters:
+    # Descriptions for all DVL configurations can be found in the Nucleus
+    # documentation
+
+    # Default IP address for the Nucleus DVL when used with the BlueROV2.
+    ip_address: "192.168.2.201"
+
+    # Default password for the DVL.
+    password: "nortek"
+
+    # Specify a timeout for the DVL connection.
+    timeout: 5 # seconds
+
+    # Specify the maximum number of connection attempts made. Set to -1
+    # to retry indefinitely.
+    max_retries: -1
+
+    # The INS inertial frame is defined using the NED orientation positioned
+    # at the point where the "start measurement" command is issued.
+    frame_id: "odom_ned"
+
+    # All measurements are obtained from the DVL use the following coordinate
+    # convention:
+    # - x: Forward
+    # - y: Right
+    # - z: Down
+    child_frame_id: "dvl_link"
