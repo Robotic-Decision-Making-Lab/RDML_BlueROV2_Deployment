@@ -32,8 +32,11 @@ jobs:
           path: ~/.platformio
           key: platformio-${{ hashFiles('hardware/teensy/platformio.ini') }}
 
-      - name: Install PlatformIO
-        run: pip install --upgrade platformio
+      - name: Install PlatformIO Core
+        run: |
+          curl -fsSL -o get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
+          python3 get-platformio.py
+          echo "$HOME/.platformio/penv/bin" >> "$GITHUB_PATH"
 
       - name: Build firmware
         working-directory: hardware/teensy
