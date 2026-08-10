@@ -107,7 +107,7 @@ flowchart LR
 
 ### ROS 2 Configuration
 
-- ROS 2 Lyrical
+- ROS 2 Jazzy
 - MAVROS is loaded by default on the `bluerov_pi` via [service](hardware/bluerov_pi/services/ros.service)
 - The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](hardware/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](hardware/autonomy_pi/ros/autonomy_bringup)
 
