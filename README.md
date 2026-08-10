@@ -82,6 +82,19 @@ flowchart LR
 
 ---
 
+## Networking
+
+| Device                         | IP Address      | Username  | Password         |
+| ------------------------------ | --------------- | --------- | ---------------- |
+| Raspberry Pi 4 (`bluerov_pi`)  | `192.168.2.2`   | `pi`      | `raspberry`      |
+| Raspberry Pi 5 (`autonomy_pi`) | `192.168.2.3`   | `neptune` | `neptune`        |
+| Barlus Underwater Camera (New) | `192.168.2.20`  | `N/A`     | `N/A`            |
+| Barlus Underwater Camera (Old) | `192.168.2.11`  | `N/A`     | `N/A`            |
+| NVIDIA Jetson Orin Nano        | `192.168.55.1`  | `rdml`    | `marinerobotics` |
+| Nortek Nucleus 1000            | `192.168.2.201` | `N/A`     | `nortek`         |
+
+---
+
 ## Firmware and Software
 
 ### BlueOS Configuration
