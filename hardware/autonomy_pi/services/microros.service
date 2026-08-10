@@ -3,12 +3,11 @@ Description=Launch the micro-ROS agent
 After=dev-ttyAMA0.device
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 ExecStart=/bin/bash -c "source /opt/ros/jazzy/setup.bash; source /home/neptune/ws_microros/install/setup.sh; ros2 run micro_ros_agent micro_ros_agent serial --dev /dev/ttyAMA0 -b 921600;"
-RemainAfterExit=no
 Restart=on-failure
 RestartSec=2s
+User=neptune
 
 [Install]
 WantedBy=multi-user.target

@@ -1,9 +1,4 @@
 repositories:
-  reach:
-    type: git
-    url: https://github.com/Robotic-Decision-Making-Lab/reach.git
-    version: main
-
   hydrodynamics:
     type: git
     url: https://github.com/Robotic-Decision-Making-Lab/hydrodynamics.git
@@ -22,4 +17,9 @@ repositories:
   nortek_dvl:
     type: git
     url: https://github.com/Robotic-Decision-Making-Lab/nortek_dvl.git
+    version: main
+
+  mavros_thruster_hardware:
+    type: git
+    url: https://github.com/Robotic-Decision-Making-Lab/mavros_thruster_hardware.git
     version: main
