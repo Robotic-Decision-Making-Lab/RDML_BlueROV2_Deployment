@@ -35,7 +35,7 @@ Decision Making Lab's (RDML) BlueROV2.
 
 ### Topside
 
-- See our corresponding [topside repository](<>)
+- See our corresponding [topside repository](https://github.com/Robotic-Decision-Making-Lab/RDML_BlueROV2_Topside)
 
 ---
 
