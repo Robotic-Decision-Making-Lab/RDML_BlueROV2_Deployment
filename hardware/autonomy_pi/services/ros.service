@@ -3,10 +3,8 @@ Description=Launch the ROS 2 autonomy stack
 After=network-online.target
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
+Type=simple
 ExecStart=/usr/local/bin/launch.sh
-RemainAfterExit=no
 Restart=on-failure
 RestartSec=2s
 User=neptune
