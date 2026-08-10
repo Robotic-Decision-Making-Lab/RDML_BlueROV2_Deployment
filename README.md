@@ -86,14 +86,17 @@ flowchart LR
 
 ### BlueOS Configuration
 
-- ArduSub: vX.X.X
-- TODO: describe additional endpoint added for MAVROS
+- ArduSub: vX.X.X <!-- TODO: confirm flashed version -->
+- BlueOS's MAVLink router is configured with an additional UDP endpoint, in the **MAVLink
+  Endpoints** page, targeting `127.0.0.1:14755`. This mirrors the flight controller's MAVLink
+  stream to the `mavros_node` container (`network_mode: host`), which listens on that port per
+  its `fcu_url` in [`mavros.yaml`](hardware/bluerov_pi/docker/mavros.yaml).
 
 ### ROS 2 Configuration
 
 - ROS 2 Lyrical
 - MAVROS is loaded by default on the `bluerov_pi` via [service](hardware/bluerov_pi/services/ros.service)
-- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](autonomy_pi/ros/autonomy_bringup)
+- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](hardware/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](hardware/autonomy_pi/ros/autonomy_bringup)
 
 ---
 
