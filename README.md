@@ -19,7 +19,7 @@ Decision Making Lab's (RDML) BlueROV2.
 | Device                                | Operating System                |
 | ------------------------------------- | ------------------------------- |
 | Raspberry Pi 4, 16 GB (`bluerov_pi`)  | Raspberry Pi OS Lite (Bookworm) |
-| Raspberry Pi 5, 16 GB (`autonomy_pi`) | Ubuntu 24.04 Server             |
+| Raspberry Pi 5, 16 GB (`autonomy_pi`) | Ubuntu 26.04 Server             |
 | Teensy 4.0                            | Teensyduino                     |
 | NVIDIA Jetson Orin Nano               | Ubuntu 22.04                    |
 
@@ -114,7 +114,7 @@ flowchart LR
 
 ### ROS 2 Configuration
 
-- ROS 2 Jazzy
+- ROS 2 Lyrical
 - MAVROS is loaded by default on the `bluerov_pi` via [service](hardware/bluerov_pi/services/ros.service)
 - The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](hardware/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](hardware/autonomy_pi/ros/autonomy_bringup)
 

@@ -1,4 +1,4 @@
-ARG ROS_DISTRO=jazzy
+ARG ROS_DISTRO=lyrical
 FROM ros:${ROS_DISTRO}-ros-base AS robot
 
 ENV DEBIAN_FRONTEND=noninteractive

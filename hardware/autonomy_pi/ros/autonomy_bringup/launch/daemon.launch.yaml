@@ -27,11 +27,10 @@ launch:
       name: dvl_file
       value: $(find-pkg-share autonomy_description)/config/dvl.yaml
 
-  # launch the ROS 2 nodes, including:
-  # 1. the BME 680 pressure sensor driver
-  # 2. the robot state publisher
-  # 3. the EKF
-  # 4. the Bar 30 pressure sensor interface
+  - let:
+      name: teensy_file
+      value: $(find-pkg-share autonomy_description)/config/teensy.yaml
+
   - node:
       pkg: bme680_driver
       exec: bme680_driver
@@ -64,11 +63,11 @@ launch:
       param:
         - from: $(var routes_file)
 
-  # launch the remaining nodes from their respective launch files, including:
-  # 1. static transforms used by the system
-  # 2. the DVL driver - this will print a warning until the DVL is turned on
   - include:
       file: $(find-pkg-share autonomy_bringup)/launch/tf.launch.yaml
 
   - include:
       file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
+
+  - include:
+      file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
