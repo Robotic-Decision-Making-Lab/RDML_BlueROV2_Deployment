@@ -137,6 +137,16 @@ pio run -t upload
 
 ---
 
+## Citation
+
+This repository has been used in the following papers:
+
+```bibtex
+@article{palmer2026stochastic
+
+}
+```
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
