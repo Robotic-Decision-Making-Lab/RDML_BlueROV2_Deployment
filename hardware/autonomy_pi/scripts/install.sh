@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export ROS_DISTRO=jazzy
+export ROS_DISTRO=lyrical
 
 # Install apt packages
 sudo apt-get update \
@@ -19,7 +19,7 @@ sudo apt-get update \
 
 # Install ROS 2
 # See the ROS installation instructions for further information:
-# https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html
+# https://docs.ros.org/en/lyrical/Installation/Ubuntu-Install-Debs.html
 sudo apt update \
   && sudo apt install locales \
   && sudo locale-gen en_US en_US.UTF-8 \
