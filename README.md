@@ -54,7 +54,7 @@ flowchart LR
 
     subgraph AutonomyBottle["Autonomy Electronics Bottle"]
         subgraph AutonomyPi["autonomy_pi (Raspberry Pi 5)"]
-            Agent["micro-ROS agent"]
+            Agent["teensy_driver"]
             Bar30["bar30_router"]
             DVL["nucleus_driver"]
             BME["bme680_driver"]
