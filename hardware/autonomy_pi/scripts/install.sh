@@ -83,9 +83,9 @@ source /opt/ros/$ROS_DISTRO/setup.sh \
 # Setup the power script
 sudo apt-get update \
   && sudo apt-get install -y python3-lgpio \
-  && sudo cp $AUTONOMY_PI/scripts/power.py /usr/local/bin \
-  && sudo chmod +x /usr/local/bin/power.py \
-  && sudo ln -s /usr/local/bin/power.py /usr/local/bin/power
+  && sudo chmod +x $AUTONOMY_PI/scripts/power.py \
+  && echo "alias power='$AUTONOMY_PI/scripts/power.py'" >> ~/.bashrc \
+  && source ~/.bashrc
 
 # Setup the pld monitor
 sudo apt-get update \
@@ -93,6 +93,11 @@ sudo apt-get update \
   && sudo cp $AUTONOMY_PI/scripts/pld.py /usr/local/bin \
   && sudo chmod +x /usr/local/bin/pld.py \
   && sudo ln -s /usr/local/bin/pld.py /usr/local/bin/pld_monitor
+
+# Setup the reset_ekf alias
+sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
+  && echo "alias reset-ekf='$AUTONOMY_PI/scripts/reset_ekf.sh'" >> ~/.bashrc \
+  && source ~/.bashrc
 
 # Configure the uart pins
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
