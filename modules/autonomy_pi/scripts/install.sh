@@ -62,6 +62,7 @@ cd ~ \
 # named with a 99- prefix so that it is applied after (and overrides) Ubuntu Server's default
 # /etc/netplan/50-cloud-init.yaml.
 sudo cp $AUTONOMY_PI/network/99-eth0-static.yaml /etc/netplan/ \
+  && sudo chmod 600 /etc/netplan/99-eth0-static.yaml \
   && sudo netplan apply
 
 # install the project dependencies
