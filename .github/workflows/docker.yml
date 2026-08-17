@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - hardware/bluerov_pi/docker/**
+      - modules/bluerov_pi/docker/**
       - .github/workflows/docker.yml
   pull_request:
     paths:
-      - hardware/bluerov_pi/docker/**
+      - modules/bluerov_pi/docker/**
       - .github/workflows/docker.yml
   workflow_dispatch:
 
@@ -27,5 +27,5 @@ jobs:
       - name: Build image
         uses: docker/build-push-action@v6
         with:
-          context: hardware/bluerov_pi/docker
+          context: modules/bluerov_pi/docker
           push: false

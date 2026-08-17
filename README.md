@@ -82,9 +82,9 @@ flowchart LR
 
 > The dashed `bar30_router` &#8594; `robot_localization` edge above is not a
 > typo: `bar30_router` currently publishes depth on `/vehicle/depth`
-> ([`routes.yaml`](hardware/autonomy_pi/ros/autonomy_description/config/routes.yaml)),
+> ([`routes.yaml`](modules/autonomy_pi/ros/autonomy_description/config/routes.yaml)),
 > but `vehicle_ekf`'s `pose0` still points at `/bar30/depth`
-> ([`ekf.yaml`](hardware/autonomy_pi/ros/autonomy_description/config/ekf.yaml)) --
+> ([`ekf.yaml`](modules/autonomy_pi/ros/autonomy_description/config/ekf.yaml)) --
 > the EKF is not currently receiving depth.
 
 ---
@@ -110,13 +110,13 @@ flowchart LR
 - BlueOS's MAVLink router is configured with an additional UDP endpoint, in the **MAVLink
   Endpoints** page, targeting `127.0.0.1:14755`. This mirrors the flight controller's MAVLink
   stream to the `mavros_node` container (`network_mode: host`), which listens on that port per
-  its `fcu_url` in [`mavros.yaml`](hardware/bluerov_pi/docker/mavros.yaml).
+  its `fcu_url` in [`mavros.yaml`](modules/bluerov_pi/docker/mavros.yaml).
 
 ### ROS 2 Configuration
 
 - ROS 2 Lyrical
-- MAVROS is loaded by default on the `bluerov_pi` via [service](hardware/bluerov_pi/services/ros.service)
-- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](hardware/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](hardware/autonomy_pi/ros/autonomy_bringup)
+- MAVROS is loaded by default on the `bluerov_pi` via [service](modules/bluerov_pi/services/ros.service)
+- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](modules/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](modules/autonomy_pi/ros/autonomy_bringup)
 
 ---
 
@@ -125,13 +125,13 @@ flowchart LR
 Each device is provisioned by its own install script, which sets up the ROS 2 workspace,
 system dependencies, and systemd services:
 
-- `bluerov_pi`: [`hardware/bluerov_pi/scripts/install.sh`](hardware/bluerov_pi/scripts/install.sh)
-- `autonomy_pi`: [`hardware/autonomy_pi/scripts/install.sh`](hardware/autonomy_pi/scripts/install.sh)
+- `bluerov_pi`: [`modules/bluerov_pi/scripts/install.sh`](modules/bluerov_pi/scripts/install.sh)
+- `autonomy_pi`: [`modules/autonomy_pi/scripts/install.sh`](modules/autonomy_pi/scripts/install.sh)
 
 The Teensy firmware is built and flashed with [PlatformIO](https://platformio.org/):
 
 ```bash
-cd hardware/teensy
+cd modules/teensy
 pio run -t upload
 ```
 
