@@ -71,3 +71,6 @@ launch:
 
   - include:
       file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
+      arg:
+        - name: parameters_file
+          value: $(var teensy_file)

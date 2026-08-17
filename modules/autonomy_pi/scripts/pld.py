@@ -19,7 +19,7 @@ if __name__ == "__main__":
                 break
 
             time.sleep(1)
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001
         # no reason to print this because no one will actually see it, but oh well
         print("Encountered an error while monitoring the PLD pin:", e)
     finally:

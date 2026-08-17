@@ -1,0 +1,39 @@
+name: ROS
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - modules/autonomy_pi/**
+      - .github/workflows/ros.yml
+  pull_request:
+    paths:
+      - modules/autonomy_pi/**
+      - .github/workflows/ros.yml
+  workflow_dispatch:
+
+env:
+  CLANG_TIDY: true
+
+jobs:
+  test:
+    name: Build autonomy_pi workspace
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env:
+          - ROS_DISTRO: lyrical
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run ROS Industrial CI
+        uses: ros-industrial/industrial_ci@master
+        env:
+          ROS_DISTRO: ${{ matrix.env.ROS_DISTRO }}
+          CXXFLAGS: -Wall -Wextra -Wpedantic -std=c++23
+          CLANG_TIDY: true
+          TARGET_WORKSPACE: modules/autonomy_pi/ros
+          UPSTREAM_WORKSPACE: modules/autonomy_pi/deps.repos

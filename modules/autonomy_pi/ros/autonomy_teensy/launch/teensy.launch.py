@@ -1,22 +1,16 @@
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, EmitEvent, RegisterEventHandler
 from launch.events import matches_action
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import LifecycleNode
 from launch_ros.event_handlers import OnStateTransition
 from launch_ros.events.lifecycle import ChangeState
-from launch_ros.substitutions import FindPackageShare
 from lifecycle_msgs.msg import Transition
 
 
 def generate_launch_description():
     declare_ns = DeclareLaunchArgument("ns", default_value="")
-    declare_parameters_file = DeclareLaunchArgument(
-        "parameters_file",
-        default_value=PathJoinSubstitution(
-            [FindPackageShare("teensy_driver"), "config", "dvl.yaml"]
-        ),
-    )
+    declare_parameters_file = DeclareLaunchArgument("parameters_file")
 
     teensy_driver_node = LifecycleNode(
         package="autonomy_teensy",
