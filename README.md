@@ -39,32 +39,6 @@ Decision Making Lab's (RDML) BlueROV2.
 
 ---
 
-## Wiring & GPIO
-
-### Teensy 4.0
-
-| Signal               | Pin / value                                        |
-| -------------------- | -------------------------------------------------- |
-| I2C SDA              | 18                                                 |
-| I2C SCL              | 19                                                 |
-| BNO08x INT           | 2                                                  |
-| BNO08x RST           | 3                                                  |
-| I2C addr             | `0x4A`                                             |
-| UART → `autonomy_pi` | `Serial1`, 921600 baud → Pi UART0 (`/dev/ttyAMA0`) |
-| USB debug            | `Serial`, 9600 baud                                |
-
-### Autonomy Pi GPIO
-
-| Device                                 | GPIO                                     |
-| -------------------------------------- | ---------------------------------------- |
-| `arm1`                                 | 24                                       |
-| `arm2`                                 | 25                                       |
-| `sonar`                                | 26                                       |
-| `dvl`                                  | 27                                       |
-| PLD (power-loss detect, `pld_monitor`) | 6 — no debounce, 1 low sample = shutdown |
-
----
-
 ## System Architecture
 
 ```mermaid
@@ -125,6 +99,32 @@ flowchart LR
 | Barlus Underwater Camera (Old) | `192.168.2.11`  | `N/A`     | `N/A`            |
 | NVIDIA Jetson Orin Nano        | `192.168.55.1`  | `rdml`    | `REDACTED` |
 | Nortek Nucleus 1000            | `192.168.2.201` | `N/A`     | `REDACTED`         |
+
+---
+
+## Wiring & GPIO
+
+### Teensy 4.0
+
+| Signal               | Pin / value                                        |
+| -------------------- | -------------------------------------------------- |
+| I2C SDA              | 18                                                 |
+| I2C SCL              | 19                                                 |
+| BNO08x INT           | 2                                                  |
+| BNO08x RST           | 3                                                  |
+| I2C addr             | `0x4A`                                             |
+| UART → `autonomy_pi` | `Serial1`, 921600 baud → Pi UART0 (`/dev/ttyAMA0`) |
+| USB debug            | `Serial`, 9600 baud                                |
+
+### Autonomy Pi GPIO
+
+| Device                                 | GPIO                                     |
+| -------------------------------------- | ---------------------------------------- |
+| `arm1`                                 | 24                                       |
+| `arm2`                                 | 25                                       |
+| `sonar`                                | 26                                       |
+| `dvl`                                  | 27                                       |
+| PLD (power-loss detect, `pld_monitor`) | 6 — no debounce, 1 low sample = shutdown |
 
 ---
 
