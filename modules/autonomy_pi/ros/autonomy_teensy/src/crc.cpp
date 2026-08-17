@@ -1,4 +1,4 @@
-#include "autonomy_teensy/crc.hpp"
+#include "crc.hpp"
 
 namespace teensy::protocol
 {
