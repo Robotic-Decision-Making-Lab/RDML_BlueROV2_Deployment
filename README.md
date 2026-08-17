@@ -41,7 +41,7 @@ Decision Making Lab's (RDML) BlueROV2.
 
 ## Wiring & GPIO
 
-### Teensy 4.0 (`modules/teensy/include/pinout.h`)
+### Teensy 4.0
 
 | Signal               | Pin / value                                        |
 | -------------------- | -------------------------------------------------- |
@@ -53,7 +53,7 @@ Decision Making Lab's (RDML) BlueROV2.
 | UART → `autonomy_pi` | `Serial1`, 921600 baud → Pi UART0 (`/dev/ttyAMA0`) |
 | USB debug            | `Serial`, 9600 baud                                |
 
-### `autonomy_pi` GPIO (`modules/autonomy_pi/scripts/power.py`, `gpiochip4`) — active-low, low = on
+### Autonomy Pi GPIO
 
 | Device                                 | GPIO                                     |
 | -------------------------------------- | ---------------------------------------- |
