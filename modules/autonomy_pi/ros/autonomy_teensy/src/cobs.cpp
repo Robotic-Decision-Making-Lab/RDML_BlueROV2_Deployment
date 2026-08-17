@@ -1,4 +1,4 @@
-#include "autonomy_teensy/cobs.hpp"
+#include "cobs.hpp"
 
 #include <stdexcept>
 

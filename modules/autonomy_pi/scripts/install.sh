@@ -40,7 +40,7 @@ echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc \
 
 # Clone the repo outside the colcon workspace, then symlink only this module's
 # ros/ directory into the workspace - we use this to avoid cluttering the
-# project workspace
+# project workspace with packages from the other modules
 export REPO_ROOT=/home/$USER/RDML_BlueROV2_Deployment
 export AUTONOMY_PI=$REPO_ROOT/modules/autonomy_pi
 export USER_WORKSPACE=/home/$USER/ws_ros
