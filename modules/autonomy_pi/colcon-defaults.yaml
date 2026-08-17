@@ -1,17 +1,6 @@
-# Activated by: export COLCON_DEFAULTS_FILE=<repo>/modules/autonomy_pi/colcon-defaults.yaml
-#
-# colcon does NOT discover this file by name or location on its own -- the
-# env var above is required, or these settings are silently ignored.
-#
-# `packages-up-to` makes autonomy_bringup/package.xml the build manifest: only
-# autonomy_bringup and its transitive dependencies are built, so unrelated
-# packages pulled in by deps.repos (e.g. unused auv_controllers packages)
-# never compile on this Pi. Declaring the same selection under `list` keeps
-# `colcon list` reporting exactly what `colcon build` will build.
 build:
   base-paths: [src]
   packages-up-to: [autonomy_bringup]
-  symlink-install: true
   parallel-workers: 1
 
 list:
