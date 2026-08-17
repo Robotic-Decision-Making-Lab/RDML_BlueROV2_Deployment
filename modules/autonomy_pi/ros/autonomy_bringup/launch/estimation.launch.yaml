@@ -69,8 +69,12 @@ launch:
   - include:
       file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
 
-  - include:
-      file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
-      arg:
-        - name: parameters_file
-          value: $(var teensy_file)
+  - group:
+      - set_remap:
+          from: imu01
+          to: /vehicle/imu01
+      - include:
+          file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
+          arg:
+            - name: parameters_file
+              value: $(var teensy_file)
