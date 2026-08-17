@@ -5,8 +5,6 @@ export ROS_DISTRO=lyrical
 # Install apt packages
 sudo apt-get update \
   && sudo apt-get install -y \
-    python3-pip \
-    python3-venv \
     curl \
     build-essential \
     nmap \
@@ -47,38 +45,38 @@ cd ~ \
   && cd $USER_WORKSPACE
 
 # Install the project dependencies
-git clone git@github.com:evan-palmer/bluerov-deployment.git src/bluerov-deployment \
-  && export AUTONOMY_PI=$USER_WORKSPACE/src/bluerov-deployment/autonomy-pi \
-  && vcs import src < $AUTONOMY_PI/pi.repos \
+git clone git@github.com:Robotic-Decision-Making-Lab/RDML_BlueROV2_Deployment.git src/RDML_BlueROV2_Deployment \
+  && export AUTONOMY_PI=$USER_WORKSPACE/src/RDML_BlueROV2_Deployment/hardware/autonomy_pi \
+  && vcs import src < $AUTONOMY_PI/ros/pi.repos \
   && sudo rosdep init \
   && rosdep update \
-  && rosdep install -y --from-paths src --ignore-src --skip-keys "barlus_image_pipeline"
+  && rosdep install -y --from-paths src --ignore-src
 
 # Build the workspace
 cd $USER_WORKSPACE \
-  && MAKEFLAGS="-j1 -l1" colcon build --allow-overriding velocity_controllers \
+  && MAKEFLAGS="-j1 -l1" colcon build \
   && echo "if [ -f /home/neptune/ws_ros/install/setup.bash ]; then source /home/neptune/ws_ros/install/setup.bash; fi" >> ~/.bashrc \
   && source ~/.bashrc
 
 # Create the micro-ROS workspace
-cd ~ \
-  && export MICROROS_WORKSPACE=/home/$USER/ws_microros \
-  && mkdir -p $MICROROS_WORKSPACE/src \
-  && cd $MICROROS_WORKSPACE
+# cd ~ \
+#   && export MICROROS_WORKSPACE=/home/$USER/ws_microros \
+#   && mkdir -p $MICROROS_WORKSPACE/src \
+#   && cd $MICROROS_WORKSPACE
 
-# Install micro-ROS
-git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup \
-    && sudo apt update \
-    && rosdep update \
-    && rosdep install --from-paths src --ignore-src -r -y
+# # Install micro-ROS
+# git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup \
+#     && sudo apt update \
+#     && rosdep update \
+#     && rosdep install --from-paths src --ignore-src -r -y
 
-source /opt/ros/$ROS_DISTRO/setup.sh \
-    && colcon build \
-    && source /home/$USER/ws_microros/install/setup.sh \
-    && ros2 run micro_ros_setup create_agent_ws.sh \
-    && ros2 run micro_ros_setup build_agent.sh \
-    && echo "if [ -f /home/$USER/ws_microros/install/setup.sh ]; then source /home/$USER/ws_microros/install/setup.sh; fi" >> /home/$USER/.bashrc \
-    && source ~/.bashrc
+# source /opt/ros/$ROS_DISTRO/setup.sh \
+#     && colcon build \
+#     && source /home/$USER/ws_microros/install/setup.sh \
+#     && ros2 run micro_ros_setup create_agent_ws.sh \
+#     && ros2 run micro_ros_setup build_agent.sh \
+#     && echo "if [ -f /home/$USER/ws_microros/install/setup.sh ]; then source /home/$USER/ws_microros/install/setup.sh; fi" >> /home/$USER/.bashrc \
+#     && source ~/.bashrc
 
 # Setup the power script
 sudo apt-get update \
