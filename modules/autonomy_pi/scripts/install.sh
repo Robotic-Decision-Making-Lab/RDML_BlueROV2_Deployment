@@ -113,6 +113,15 @@ sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 
 # configure user access to the I2C devices
+#
+# note that Ubuntu Server 26.04 enables serial-getty@ttyAMA0.service by default, which
+# can result in /dev/ttyAMA0 being owned by root:tty and no group access despite running
+# the following command (you will probably notice this because minicom or the driver isn't
+# able to access ttyAMA0 without sudo permissions). if this happens, check
+#   systemctl status serial-getty@ttyAMA0.service
+# and disable it:
+#   sudo systemctl disable serial-getty@ttyAMA0.service
+#   sudo systemctl mask serial-getty@ttyAMA0.service
 sudo usermod -aG dialout $USER
 
 # Configure systemd to run the ROS stack on boot

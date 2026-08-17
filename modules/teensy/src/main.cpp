@@ -30,10 +30,10 @@ void setup()
   Serial.begin(9600);     // USB serial connection for debugging
   Serial1.begin(921600);  // hardware serial connection to the Pi
 
-  // use SDA pin 18, SCL pin 19 with a clock rate of 400 kHz
+  // use SDA pin 18, SCL pin 19, clocked at 1 MHz (BNO08x supports Fast Mode Plus)
   // for the quick connectors, this corresponds to blue: pin 18 and yellow: pin 19
   Wire.begin();
-  Wire.setClock(400000);
+  Wire.setClock(1000000);
 
   Serial.println("Initializing BNO08x IMU...");
 
