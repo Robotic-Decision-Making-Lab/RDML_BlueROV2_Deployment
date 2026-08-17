@@ -38,45 +38,34 @@ sudo apt update \
 echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc \
   && source ~/.bashrc
 
-# Create a workspace
+# Clone the repo outside the colcon workspace, then symlink only this module's
+# ros/ directory into the workspace - we use this to avoid cluttering the
+# project workspace
+export REPO_ROOT=/home/$USER/RDML_BlueROV2_Deployment
+export AUTONOMY_PI=$REPO_ROOT/modules/autonomy_pi
+export USER_WORKSPACE=/home/$USER/ws_ros
+
 cd ~ \
-  && export USER_WORKSPACE=/home/$USER/ws_ros \
+  && { [ -d $REPO_ROOT ] || git clone git@github.com:Robotic-Decision-Making-Lab/RDML_BlueROV2_Deployment.git $REPO_ROOT; } \
   && mkdir -p $USER_WORKSPACE/src \
-  && cd $USER_WORKSPACE
+  && ln -sfn $AUTONOMY_PI/ros $USER_WORKSPACE/src/autonomy_pi
 
 # Install the project dependencies
-git clone git@github.com:Robotic-Decision-Making-Lab/RDML_BlueROV2_Deployment.git src/RDML_BlueROV2_Deployment \
-  && export AUTONOMY_PI=$USER_WORKSPACE/src/RDML_BlueROV2_Deployment/hardware/autonomy_pi \
-  && vcs import src < $AUTONOMY_PI/ros/pi.repos \
+vcs import $USER_WORKSPACE/src < $AUTONOMY_PI/deps.repos \
   && sudo rosdep init \
   && rosdep update \
-  && rosdep install -y --from-paths src --ignore-src
+  && rosdep install -y --from-paths $USER_WORKSPACE/src --ignore-src
 
 # Build the workspace
+# COLCON_DEFAULTS_FILE scopes the build to autonomy_bringup's dependency
+# closure (see colcon-defaults.yaml), so unrelated packages pulled in by
+# deps.repos never compile here.
+export COLCON_DEFAULTS_FILE=$AUTONOMY_PI/colcon-defaults.yaml
 cd $USER_WORKSPACE \
   && MAKEFLAGS="-j1 -l1" colcon build \
-  && echo "if [ -f /home/neptune/ws_ros/install/setup.bash ]; then source /home/neptune/ws_ros/install/setup.bash; fi" >> ~/.bashrc \
+  && echo "export COLCON_DEFAULTS_FILE=$COLCON_DEFAULTS_FILE" >> ~/.bashrc \
+  && echo "if [ -f $USER_WORKSPACE/install/setup.bash ]; then source $USER_WORKSPACE/install/setup.bash; fi" >> ~/.bashrc \
   && source ~/.bashrc
-
-# Create the micro-ROS workspace
-# cd ~ \
-#   && export MICROROS_WORKSPACE=/home/$USER/ws_microros \
-#   && mkdir -p $MICROROS_WORKSPACE/src \
-#   && cd $MICROROS_WORKSPACE
-
-# # Install micro-ROS
-# git clone -b $ROS_DISTRO https://github.com/micro-ROS/micro_ros_setup.git src/micro_ros_setup \
-#     && sudo apt update \
-#     && rosdep update \
-#     && rosdep install --from-paths src --ignore-src -r -y
-
-# source /opt/ros/$ROS_DISTRO/setup.sh \
-#     && colcon build \
-#     && source /home/$USER/ws_microros/install/setup.sh \
-#     && ros2 run micro_ros_setup create_agent_ws.sh \
-#     && ros2 run micro_ros_setup build_agent.sh \
-#     && echo "if [ -f /home/$USER/ws_microros/install/setup.sh ]; then source /home/$USER/ws_microros/install/setup.sh; fi" >> /home/$USER/.bashrc \
-#     && source ~/.bashrc
 
 # Setup the power script
 sudo apt-get update \
@@ -92,17 +81,15 @@ sudo apt-get update \
   && sudo chmod +x /usr/local/bin/pld.py \
   && sudo ln -s /usr/local/bin/pld.py /usr/local/bin/pld_monitor
 
-# Setup the reset_ekf alias
+# Setup the utillity aliases
 sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
   && echo "alias reset-ekf='$AUTONOMY_PI/scripts/reset_ekf.sh'" >> ~/.bashrc \
+  && echo "alias wks='cd $USER_WORKSPACE'" >> ~/.bashrc \
+  && echo "alias cbs='colcon build && source install/setup.bash'" >> ~/.bashrc \
   && source ~/.bashrc
 
 # Configure the uart pins
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
-
-# Configure systemd to run the micro-ROS service on boot
-sudo cp $AUTONOMY_PI/systemd/microros.service /etc/systemd/system \
-  && sudo systemctl enable microros.service
 
 # Configure user access to the I2C devices
 sudo usermod -aG dialout $USER
