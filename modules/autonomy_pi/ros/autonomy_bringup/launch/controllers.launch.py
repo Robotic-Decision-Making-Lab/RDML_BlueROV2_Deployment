@@ -19,7 +19,6 @@
 # THE SOFTWARE.
 
 import itertools
-from typing import Optional
 
 from launch import LaunchDescription
 from launch.actions import RegisterEventHandler
@@ -46,7 +45,7 @@ def generate_launch_description() -> LaunchDescription:
     )
 
     def make_controller_args(
-        name: str, active: bool = False, remappings: Optional[list[str]] = None
+        name: str, active: bool = False, remappings: list[str] | None = None
     ):
         cm = ["--controller-manager", ["", "controller_manager"]]
         controller_timeout = ["--controller-manager-timeout", "120"]

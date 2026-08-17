@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Install apt packages
 sudo apt-get update \
   && sudo apt-get install -y \

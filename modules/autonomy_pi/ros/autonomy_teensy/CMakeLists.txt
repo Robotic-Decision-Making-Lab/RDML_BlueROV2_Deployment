@@ -30,13 +30,13 @@ target_sources(
     PRIVATE src/client.cpp src/cobs.cpp src/crc.cpp src/packet.cpp
     PUBLIC
         FILE_SET HEADERS
-        BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
-        FILES
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/client.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/device_id.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/driver.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/packet.hpp
-            ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/packet_id.hpp
+            BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
+            FILES
+                ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/client.hpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/device_id.hpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/driver.hpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/packet.hpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/packet_id.hpp
 )
 target_compile_features(autonomy_teensy_protocol PUBLIC cxx_std_23)
 target_link_libraries(autonomy_teensy_protocol PUBLIC Boost::boost)
@@ -48,8 +48,8 @@ target_sources(
     PRIVATE src/driver.cpp
     PUBLIC
         FILE_SET HEADERS
-        BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
-        FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/driver.hpp
+            BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
+            FILES ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/driver.hpp
 )
 target_compile_features(autonomy_teensy_library PUBLIC cxx_std_23)
 target_link_libraries(
@@ -79,6 +79,8 @@ install(
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     FILE_SET HEADERS
 )
+
+install(DIRECTORY launch DESTINATION share/autonomy_teensy)
 
 ament_export_targets(export_autonomy_teensy_library HAS_LIBRARY_TARGET)
 ament_export_dependencies(

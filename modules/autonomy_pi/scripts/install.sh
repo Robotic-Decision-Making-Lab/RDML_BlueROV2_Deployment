@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# this is the last LTS that I (Evan) will upgrade to prior to graduation.
-# for new students or research engineers that have ended up here, I suggest
-# that you track the latest LTS and use that onboard the vehicle. the best time
-# to upgrade is usually after the ICRA deadline, at which point Ubuntu 2X.04.1 will
-# have released and you can upgrade both your topside system and the vehicle
+# prior to running this script, the Pi NVMe drive should have been flashed.
+#
+# if it has not yet been flashed, refer to the following resource:
+# https://wolfpaulus.com/rp5-ubuntu-cli/
+
 export ROS_DISTRO=lyrical
 
 # install apt packages
@@ -99,7 +99,7 @@ sudo apt-get update \
   && sudo chmod +x /usr/local/bin/pld.py \
   && sudo ln -s /usr/local/bin/pld.py /usr/local/bin/pld_monitor
 
-# setup the utillity aliases
+# setup the utility aliases
 #
 # this might be better placed in an `aliases.sh` file, but they will only really
 # be configured on install, so this is fine

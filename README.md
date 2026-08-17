@@ -39,6 +39,32 @@ Decision Making Lab's (RDML) BlueROV2.
 
 ---
 
+## Wiring & GPIO
+
+### Teensy 4.0 (`modules/teensy/include/pinout.h`)
+
+| Signal               | Pin / value                                        |
+| -------------------- | -------------------------------------------------- |
+| I2C SDA              | 18                                                 |
+| I2C SCL              | 19                                                 |
+| BNO08x INT           | 2                                                  |
+| BNO08x RST           | 3                                                  |
+| I2C addr             | `0x4A`                                             |
+| UART → `autonomy_pi` | `Serial1`, 921600 baud → Pi UART0 (`/dev/ttyAMA0`) |
+| USB debug            | `Serial`, 9600 baud                                |
+
+### `autonomy_pi` GPIO (`modules/autonomy_pi/scripts/power.py`, `gpiochip4`) — active-low, low = on
+
+| Device                                 | GPIO                                     |
+| -------------------------------------- | ---------------------------------------- |
+| `arm1`                                 | 24                                       |
+| `arm2`                                 | 25                                       |
+| `sonar`                                | 26                                       |
+| `dvl`                                  | 27                                       |
+| PLD (power-loss detect, `pld_monitor`) | 6 — no debounce, 1 low sample = shutdown |
+
+---
+
 ## System Architecture
 
 ```mermaid
@@ -142,8 +168,14 @@ pio run -t upload
 This repository has been used in the following papers:
 
 ```bibtex
-@article{palmer2026stochastic
-
+@article{palmer2026stochastic,
+  title         = {{Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics}},
+  author        = {Palmer, Evan F. and Hatton, Ross L. and Hollinger, Geoffrey A.},
+  journal       = {arXiv preprint arXiv:2608.08356},
+  year          = {2026},
+  eprint        = {https://doi.org/10.48550/arXiv.2608.08356},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
 }
 ```
 
