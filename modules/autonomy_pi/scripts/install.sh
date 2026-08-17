@@ -1,8 +1,13 @@
 #!/bin/bash
 
+# this is the last LTS that I (Evan) will upgrade to prior to graduation.
+# for new students or research engineers that have ended up here, I suggest
+# that you track the latest LTS and use that onboard the vehicle. the best time
+# to upgrade is usually after the ICRA deadline, at which point Ubuntu 2X.04.1 will
+# have released and you can upgrade both your topside system and the vehicle
 export ROS_DISTRO=lyrical
 
-# Install apt packages
+# install apt packages
 sudo apt-get update \
   && sudo apt-get install -y \
     curl \
@@ -15,7 +20,8 @@ sudo apt-get update \
     minicom \
   && sudo apt-get autoremove -y
 
-# Install ROS 2
+# install ROS 2
+#
 # See the ROS installation instructions for further information:
 # https://docs.ros.org/en/lyrical/Installation/Ubuntu-Install-Debs.html
 sudo apt update \
@@ -34,13 +40,14 @@ sudo apt update \
     ros-$ROS_DISTRO-ros-base \
   && sudo apt autoremove -y
 
-# Configure the environment
+# configure the ROS 2 environment
 echo "source /opt/ros/$ROS_DISTRO/setup.bash" >> ~/.bashrc \
   && source ~/.bashrc
 
-# Clone the repo outside the colcon workspace, then symlink only this module's
-# ros/ directory into the workspace - we use this to avoid cluttering the
-# project workspace with packages from the other modules
+# clone the repo outside the colcon workspace, then symlink only this module's
+# ros/ directory into the workspace
+#
+# we use this to avoid cluttering the project workspace with packages from the other modules
 export REPO_ROOT=/home/$USER/RDML_BlueROV2_Deployment
 export AUTONOMY_PI=$REPO_ROOT/modules/autonomy_pi
 export USER_WORKSPACE=/home/$USER/ws_ros
@@ -50,16 +57,24 @@ cd ~ \
   && mkdir -p $USER_WORKSPACE/src \
   && ln -sfn $AUTONOMY_PI/ros $USER_WORKSPACE/src/autonomy_pi
 
-# Install the project dependencies
+# configure a static IP for the Ethernet interface.
+#
+# named with a 99- prefix so that it is applied after (and overrides) Ubuntu Server's default
+# /etc/netplan/50-cloud-init.yaml.
+sudo cp $AUTONOMY_PI/network/99-eth0-static.yaml /etc/netplan/ \
+  && sudo netplan apply
+
+# install the project dependencies
 vcs import $USER_WORKSPACE/src < $AUTONOMY_PI/deps.repos \
   && sudo rosdep init \
   && rosdep update \
   && rosdep install -y --from-paths $USER_WORKSPACE/src --ignore-src
 
-# Build the workspace
-# COLCON_DEFAULTS_FILE scopes the build to autonomy_bringup's dependency
+# build the workspace
+#
+# the COLCON_DEFAULTS_FILE scopes the build to autonomy_bringup's dependency
 # closure (see colcon-defaults.yaml), so unrelated packages pulled in by
-# deps.repos never compile here.
+# deps.repos don't get compiled here.
 export COLCON_DEFAULTS_FILE=$AUTONOMY_PI/colcon-defaults.yaml
 cd $USER_WORKSPACE \
   && MAKEFLAGS="-j1 -l1" colcon build \
@@ -67,31 +82,36 @@ cd $USER_WORKSPACE \
   && echo "if [ -f $USER_WORKSPACE/install/setup.bash ]; then source $USER_WORKSPACE/install/setup.bash; fi" >> ~/.bashrc \
   && source ~/.bashrc
 
-# Setup the power script
+# setup the power script
+#
+# this gets used to turn on and off system peripherals like the DVL, Alpha 5, etc.
 sudo apt-get update \
   && sudo apt-get install -y python3-lgpio \
   && sudo chmod +x $AUTONOMY_PI/scripts/power.py \
   && echo "alias power='$AUTONOMY_PI/scripts/power.py'" >> ~/.bashrc \
   && source ~/.bashrc
 
-# Setup the pld monitor
+# setup the pld monitor
 sudo apt-get update \
   && sudo apt-get install -y gpiod \
   && sudo cp $AUTONOMY_PI/scripts/pld.py /usr/local/bin \
   && sudo chmod +x /usr/local/bin/pld.py \
   && sudo ln -s /usr/local/bin/pld.py /usr/local/bin/pld_monitor
 
-# Setup the utillity aliases
+# setup the utillity aliases
+#
+# this might be better placed in an `aliases.sh` file, but they will only really
+# be configured on install, so this is fine
 sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
   && echo "alias reset-ekf='$AUTONOMY_PI/scripts/reset_ekf.sh'" >> ~/.bashrc \
   && echo "alias wks='cd $USER_WORKSPACE'" >> ~/.bashrc \
   && echo "alias cbs='colcon build && source install/setup.bash'" >> ~/.bashrc \
   && source ~/.bashrc
 
-# Configure the uart pins
+# configure the uart pins so that we can stream serial data from the teensy
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 
-# Configure user access to the I2C devices
+# configure user access to the I2C devices
 sudo usermod -aG dialout $USER
 
 # Configure systemd to run the ROS stack on boot
