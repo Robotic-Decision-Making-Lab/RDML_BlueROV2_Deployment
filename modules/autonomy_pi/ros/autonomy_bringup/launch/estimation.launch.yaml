@@ -1,0 +1,80 @@
+launch:
+  # this launch file is responsible for starting nodes that we want (and are able to)
+  # launch on system start-up. some nodes can't be started immediately because they
+  # require prior configuration
+
+  - let:
+      name: description_file
+      value: $(find-pkg-share autonomy_description)/description/config.xacro
+
+  - let:
+      name: robot_description
+      value: $(command 'xacro $(var description_file)')
+
+  - let:
+      name: ekf_file
+      value: $(find-pkg-share autonomy_description)/config/ekf.yaml
+
+  - let:
+      name: bme680_file
+      value: $(find-pkg-share bme680_driver)/config/bme680.yaml
+
+  - let:
+      name: routes_file
+      value: $(find-pkg-share autonomy_description)/config/routes.yaml
+
+  - let:
+      name: dvl_file
+      value: $(find-pkg-share autonomy_description)/config/dvl.yaml
+
+  - let:
+      name: teensy_file
+      value: $(find-pkg-share autonomy_description)/config/teensy.yaml
+
+  - node:
+      pkg: bme680_driver
+      exec: bme680_driver
+      param:
+        - from: $(var bme680_file)
+
+  - node:
+      pkg: robot_state_publisher
+      exec: robot_state_publisher
+      param:
+        - name: robot_description
+          value: $(var robot_description)
+
+  # we remap the state estimator topic to a vehicle-specific topic to handle
+  # scenarios where there are multiple estimators running (e.g., object detection)
+  - node:
+      pkg: robot_localization
+      exec: ekf_node
+      output: screen
+      name: vehicle_ekf
+      param:
+        - from: $(var ekf_file)
+      remap:
+        - from: /odometry/filtered
+          to: /vehicle/odometry/filtered
+
+  - node:
+      pkg: autonomy_routers
+      exec: bar30_router
+      param:
+        - from: $(var routes_file)
+
+  - include:
+      file: $(find-pkg-share autonomy_bringup)/launch/tf.launch.yaml
+
+  - include:
+      file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
+
+  - group:
+      - set_remap:
+          from: imu01
+          to: /vehicle/imu01
+      - include:
+          file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
+          arg:
+            - name: parameters_file
+              value: $(var teensy_file)

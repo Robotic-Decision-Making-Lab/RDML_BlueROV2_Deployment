@@ -1,0 +1,8 @@
+build:
+  base-paths: [src]
+  packages-up-to: [autonomy_bringup]
+  parallel-workers: 1
+
+list:
+  base-paths: [src]
+  packages-up-to: [autonomy_bringup]
