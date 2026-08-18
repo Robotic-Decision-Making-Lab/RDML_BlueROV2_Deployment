@@ -1,0 +1,68 @@
+teensy_driver:
+  port:
+    type: string
+    default_value: "/dev/ttyAMA0"
+    description: The serial port that the Teensy is connected to.
+    read_only: true
+    validation:
+      not_empty<>: null
+
+  baudrate:
+    type: int
+    default_value: 921600
+    description: The baudrate to open the serial port with. This should match the Teensy `Serial1.begin()`.
+    read_only: true
+    validation:
+      gt<>: 0
+
+  # the following parameters will need to be revised in the future if additional sensors are
+  # added. one way to do this could be to include a list of sensors and map the sensor-specific parameters
+  # to the sensor name. given that we only have the IMU connected right now though, this should be fine.
+
+  frame_id:
+    type: string
+    default_value: "bno08x"
+    description: The frame ID to stamp published IMU messages with.
+    read_only: true
+    validation:
+      not_empty<>: null
+
+  orientation_covariance:
+    type: double_array
+    default_value:
+      - 0.0012
+      - 0.0012
+      - 0.0012
+    description: >-
+      Diagonal of the orientation covariance matrix (roll, pitch, yaw), in rad^2. Recovered
+      from the deleted micro-ROS firmware, which estimated it from ~120 s of BNO08x data.
+    read_only: true
+    validation:
+      fixed_size<>: 3
+
+  angular_velocity_covariance:
+    type: double_array
+    default_value:
+      - 0.00005
+      - 0.00005
+      - 0.00005
+    description: >-
+      Diagonal of the angular velocity covariance matrix (x, y, z), in (rad/s)^2. Recovered
+      from the deleted micro-ROS firmware, which estimated it from ~120 s of BNO08x data.
+    read_only: true
+    validation:
+      fixed_size<>: 3
+
+  linear_acceleration_covariance:
+    type: double_array
+    default_value:
+      - 0.0023
+      - 0.0023
+      - 0.0023
+    description: >-
+      Diagonal of the linear acceleration covariance matrix (x, y, z), in (m/s^2)^2.
+      Recovered from the deleted micro-ROS firmware, which estimated it from ~120 s of
+      BNO08x data.
+    read_only: true
+    validation:
+      fixed_size<>: 3

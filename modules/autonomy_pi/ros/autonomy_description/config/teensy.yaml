@@ -1,0 +1,29 @@
+teensy_driver:
+  ros__parameters:
+    # The Teensy is connected to the /dev/ttyAMA0 device
+    port: "/dev/ttyAMA0"
+
+    # Default baudrate used by `Serial1` on the Teensy
+    baudrate: 921600
+
+    # Frame ID used by the system. If we add more IMUs, then this might
+    # need to change.
+    frame_id: "bno08x"
+
+    # configure the default covariances published by the driver. these
+    # were estimated using ~120s of data from the IMU. We scaled them up a little
+    # to prevent over-confidence in the estimates by the EKF.
+    orientation_covariance:
+      - 0.0012
+      - 0.0012
+      - 0.0012
+
+    angular_velocity_covariance:
+      - 0.00005
+      - 0.00005
+      - 0.00005
+
+    linear_acceleration_covariance:
+      - 0.0023
+      - 0.0023
+      - 0.0023

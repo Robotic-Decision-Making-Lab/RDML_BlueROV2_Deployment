@@ -19,7 +19,7 @@ Decision Making Lab's (RDML) BlueROV2.
 | Device                                | Operating System                |
 | ------------------------------------- | ------------------------------- |
 | Raspberry Pi 4, 16 GB (`bluerov_pi`)  | Raspberry Pi OS Lite (Bookworm) |
-| Raspberry Pi 5, 16 GB (`autonomy_pi`) | Ubuntu 24.04 Server             |
+| Raspberry Pi 5, 16 GB (`autonomy_pi`) | Ubuntu 26.04 Server             |
 | Teensy 4.0                            | Teensyduino                     |
 | NVIDIA Jetson Orin Nano               | Ubuntu 22.04                    |
 
@@ -48,18 +48,18 @@ flowchart LR
 
         subgraph BlueROVPi["bluerov_pi (Raspberry Pi 4)"]
             BlueOS["BlueOS"]
-            MAVROS["mavros_node\n(Docker, network_mode: host)"]
+            MAVROS["mavros_node\n(Docker)"]
         end
     end
 
     subgraph AutonomyBottle["Autonomy Electronics Bottle"]
         subgraph AutonomyPi["autonomy_pi (Raspberry Pi 5)"]
-            Agent["micro-ROS agent"]
+            Agent["teensy_driver"]
             Bar30["bar30_router"]
             DVL["nucleus_driver"]
             BME["bme680_driver"]
-            EKF["robot_localization (vehicle_ekf)"]
-            RC["ros2_control\n(thruster allocation)"]
+            EKF["robot_localization"]
+            RC["ros2_control\n(control stack)"]
             Coord["controller_coordinator"]
         end
 
@@ -68,16 +68,16 @@ flowchart LR
         end
     end
 
-    FC <--> BlueOS
-    BlueOS <--> MAVROS
+    FC -- MAVLink --> BlueOS
+    BlueOS -- MAVLink --> MAVROS
     MAVROS -- "/uas1/mavlink_source" --> Bar30
     IMU -- "serial, 921600 baud" --> Agent
-    Agent -- "/bno08x/imu" --> EKF
-    DVL --> EKF
-    Bar30 --> EKF
-    EKF --> RC
-    Coord --> RC
-    RC <--> MAVROS
+    Agent -- "/vehicle/imu01" --> EKF
+    DVL -- "/nucleus_driver/twist" --> EKF
+    Bar30 -- "/vehicle/depth" --> EKF
+    EKF -- "/vehicle/odometry/filtered" --> RC
+    Coord -- "controller_manager/switch_controller" --> RC
+    RC -- "mavros/rc/override" --> MAVROS
 ```
 
 ---
@@ -95,6 +95,32 @@ flowchart LR
 
 ---
 
+## Wiring & GPIO
+
+### Teensy 4.0
+
+| Signal               | Pin / value                                        |
+| -------------------- | -------------------------------------------------- |
+| I2C SDA              | 18                                                 |
+| I2C SCL              | 19                                                 |
+| BNO08x INT           | 2                                                  |
+| BNO08x RST           | 3                                                  |
+| I2C addr             | `0x4A`                                             |
+| UART → `autonomy_pi` | `Serial1`, 921600 baud → Pi UART0 (`/dev/ttyAMA0`) |
+| USB debug            | `Serial`, 9600 baud                                |
+
+### Autonomy Pi GPIO
+
+| Device                                 | GPIO                                     |
+| -------------------------------------- | ---------------------------------------- |
+| `arm1`                                 | 24                                       |
+| `arm2`                                 | 25                                       |
+| `sonar`                                | 26                                       |
+| `dvl`                                  | 27                                       |
+| PLD (power-loss detect, `pld_monitor`) | 6 — no debounce, 1 low sample = shutdown |
+
+---
+
 ## Firmware and Software
 
 ### BlueOS Configuration
@@ -103,13 +129,13 @@ flowchart LR
 - BlueOS's MAVLink router is configured with an additional UDP endpoint, in the **MAVLink
   Endpoints** page, targeting `127.0.0.1:14755`. This mirrors the flight controller's MAVLink
   stream to the `mavros_node` container (`network_mode: host`), which listens on that port per
-  its `fcu_url` in [`mavros.yaml`](hardware/bluerov_pi/docker/mavros.yaml).
+  its `fcu_url` in [`mavros.yaml`](modules/bluerov_pi/docker/mavros.yaml).
 
 ### ROS 2 Configuration
 
-- ROS 2 Jazzy
-- MAVROS is loaded by default on the `bluerov_pi` via [service](hardware/bluerov_pi/services/ros.service)
-- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](hardware/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](hardware/autonomy_pi/ros/autonomy_bringup)
+- ROS 2 Lyrical
+- MAVROS is loaded by default on the `bluerov_pi` via [service](modules/bluerov_pi/services/ros.service)
+- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](modules/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](modules/autonomy_pi/ros/autonomy_bringup)
 
 ---
 
@@ -118,18 +144,35 @@ flowchart LR
 Each device is provisioned by its own install script, which sets up the ROS 2 workspace,
 system dependencies, and systemd services:
 
-- `bluerov_pi`: [`hardware/bluerov_pi/scripts/install.sh`](hardware/bluerov_pi/scripts/install.sh)
-- `autonomy_pi`: [`hardware/autonomy_pi/scripts/install.sh`](hardware/autonomy_pi/scripts/install.sh)
+- `bluerov_pi`: [`modules/bluerov_pi/scripts/install.sh`](modules/bluerov_pi/scripts/install.sh)
+- `autonomy_pi`: [`modules/autonomy_pi/scripts/install.sh`](modules/autonomy_pi/scripts/install.sh)
 
 The Teensy firmware is built and flashed with [PlatformIO](https://platformio.org/):
 
 ```bash
-cd hardware/teensy
+cd modules/teensy
 pio run -t upload
 ```
 
 ---
 
+## Citation
+
+This repository has been used in the following papers:
+
+```bibtex
+@article{palmer2026stochastic,
+  title         = {{Stochastic Physics-Informed Neural Networks on Lie Groups for Learning Underwater Vehicle Dynamics}},
+  author        = {Palmer, Evan F. and Hatton, Ross L. and Hollinger, Geoffrey A.},
+  journal       = {arXiv preprint arXiv:2608.08356},
+  year          = {2026},
+  eprint        = {https://doi.org/10.48550/arXiv.2608.08356},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+}
+```
+
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE). Any documentation
+included from an external source retains its original licensing.
