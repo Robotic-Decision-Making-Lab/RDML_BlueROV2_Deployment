@@ -48,7 +48,7 @@ flowchart LR
 
         subgraph BlueROVPi["bluerov_pi (Raspberry Pi 4)"]
             BlueOS["BlueOS"]
-            MAVROS["mavros_node\n(Docker, network_mode: host)"]
+            MAVROS["mavros_node\n(Docker)"]
         end
     end
 
@@ -58,8 +58,8 @@ flowchart LR
             Bar30["bar30_router"]
             DVL["nucleus_driver"]
             BME["bme680_driver"]
-            EKF["robot_localization (vehicle_ekf)"]
-            RC["ros2_control\n(thruster allocation)"]
+            EKF["robot_localization"]
+            RC["ros2_control\n(control stack)"]
             Coord["controller_coordinator"]
         end
 
