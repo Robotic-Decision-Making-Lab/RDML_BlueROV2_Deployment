@@ -72,20 +72,13 @@ flowchart LR
     BlueOS -- MAVLink --> MAVROS
     MAVROS -- "/uas1/mavlink_source" --> Bar30
     IMU -- "serial, 921600 baud" --> Agent
-    Agent -- "/bno08x/imu" --> EKF
+    Agent -- "/vehicle/imu01" --> EKF
     DVL -- "/nucleus_driver/twist" --> EKF
-    Bar30 -. "/vehicle/depth (bar30_router) vs.\n/bar30/depth (ekf.yaml pose0) -- mismatched" .-> EKF
+    Bar30 -- "/vehicle/depth" --> EKF
     EKF -- "/vehicle/odometry/filtered" --> RC
     Coord -- "controller_manager/switch_controller" --> RC
     RC -- "mavros/rc/override" --> MAVROS
 ```
-
-> The dashed `bar30_router` &#8594; `robot_localization` edge above is not a
-> typo: `bar30_router` currently publishes depth on `/vehicle/depth`
-> ([`routes.yaml`](modules/autonomy_pi/ros/autonomy_description/config/routes.yaml)),
-> but `vehicle_ekf`'s `pose0` still points at `/bar30/depth`
-> ([`ekf.yaml`](modules/autonomy_pi/ros/autonomy_description/config/ekf.yaml)) --
-> the EKF is not currently receiving depth.
 
 ---
 
