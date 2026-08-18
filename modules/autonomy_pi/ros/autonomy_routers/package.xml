@@ -15,7 +15,7 @@
   <exec_depend>mavros_msgs</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>generate_parameter_library</exec_depend>
-
+  <test_depend>ament_xmllint</test_depend>
   <test_depend>python3-pytest</test_depend>
 
   <export>

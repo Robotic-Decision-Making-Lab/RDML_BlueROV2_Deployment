@@ -46,5 +46,10 @@ setup(
     maintainer_email="evanp922@gmail.com",
     description="Package comprising nodes used to route interfaces to new endpoints.",
     license="MIT",
+    extras_require={
+        "test": [
+            "pytest",
+        ],
+    },
     entry_points={"console_scripts": ["bar30_router = bar30_router.bar30:main"]},
 )
