@@ -174,4 +174,5 @@ This repository has been used in the following papers:
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE). Any documentation
+included from an external source retains its original licensing.
