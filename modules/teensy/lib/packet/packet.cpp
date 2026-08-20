@@ -41,4 +41,33 @@ auto encode(const Packet & packet, uint8_t * out, size_t out_size) -> ssize_t
   return encoded_size + 1;
 }
 
+auto decode(const uint8_t * data, size_t size) -> std::optional<Packet>
+{
+  uint8_t decoded[MAX_FRAME_SIZE];
+  const ssize_t decoded_size = decode_cobs(data, size, decoded, sizeof(decoded));
+
+  if (decoded_size < 0 || static_cast<size_t>(decoded_size) < HEADER_SIZE + CRC_SIZE) {
+    return std::nullopt;
+  }
+
+  const size_t body_size = static_cast<size_t>(decoded_size) - CRC_SIZE;
+  const uint8_t expected_crc = calculate_crc(decoded, body_size);
+  const uint8_t actual_crc = decoded[body_size];
+
+  if (actual_crc != expected_crc) {
+    return std::nullopt;
+  }
+
+  Packet out{};
+  out.packet_id = static_cast<PacketId>(decoded[0]);
+  out.device_id = static_cast<DeviceId>(decoded[1]);
+  out.size = body_size - HEADER_SIZE;
+
+  for (size_t i = 0; i < out.size; i++) {
+    out.payload[i] = decoded[HEADER_SIZE + i];
+  }
+
+  return out;
+}
+
 }  // namespace packet

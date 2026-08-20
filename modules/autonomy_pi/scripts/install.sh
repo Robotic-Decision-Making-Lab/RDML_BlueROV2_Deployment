@@ -105,6 +105,8 @@ sudo apt-get update \
 # be configured on install, so this is fine
 sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
   && echo "alias reset-ekf='$AUTONOMY_PI/scripts/reset_ekf.sh'" >> ~/.bashrc \
+  && sudo chmod +x $AUTONOMY_PI/scripts/calibrate_imu.py \
+  && echo "alias calibrate-imu='$AUTONOMY_PI/scripts/calibrate_imu.py'" >> ~/.bashrc \
   && echo "alias wks='cd $USER_WORKSPACE'" >> ~/.bashrc \
   && echo "alias cbs='colcon build && source install/setup.bash'" >> ~/.bashrc \
   && source ~/.bashrc

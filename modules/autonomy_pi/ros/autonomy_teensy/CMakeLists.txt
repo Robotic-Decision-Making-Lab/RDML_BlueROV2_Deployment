@@ -17,6 +17,8 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(autonomy_msgs REQUIRED)
 find_package(generate_parameter_library REQUIRED)
 find_package(Boost REQUIRED)
 
@@ -33,6 +35,7 @@ target_sources(
             BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/include
             FILES
                 ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/client.hpp
+                ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/command.hpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/device_id.hpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/driver.hpp
                 ${CMAKE_CURRENT_SOURCE_DIR}/include/autonomy_teensy/packet.hpp
@@ -61,6 +64,8 @@ target_link_libraries(
         rclcpp_components::component
         rclcpp_components::component_manager
         ${sensor_msgs_TARGETS}
+        ${std_srvs_TARGETS}
+        ${autonomy_msgs_TARGETS}
 )
 
 rclcpp_components_register_node(autonomy_teensy_library
@@ -88,6 +93,8 @@ ament_export_dependencies(
     "rclcpp_lifecycle"
     "rclcpp_components"
     "sensor_msgs"
+    "std_srvs"
+    "autonomy_msgs"
     "Boost"
 )
 

@@ -27,3 +27,8 @@ teensy_driver:
       - 0.0023
       - 0.0023
       - 0.0023
+
+    # how long to wait (s) for a response to a calibration command before retrying, and how many
+    # times to retry before giving up
+    command_timeout: 0.5
+    command_retries: 3

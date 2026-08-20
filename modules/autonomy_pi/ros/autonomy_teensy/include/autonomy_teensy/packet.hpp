@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
 #include <cstring>
 #include <stdexcept>
@@ -12,6 +13,10 @@
 
 namespace teensy::protocol
 {
+
+// MIRRORED IN modules/teensy/lib/packet/packet.h (packet::MAX_PAYLOAD_SIZE)
+// keep in sync
+inline constexpr std::size_t MAX_PAYLOAD_SIZE = 64;
 
 struct Packet
 {
@@ -40,5 +45,8 @@ auto decode_packet(const std::vector<std::uint8_t> & data) -> Packet;
 
 auto decode_packets(const std::vector<std::uint8_t> & data)
   -> std::pair<std::vector<Packet>, std::vector<std::uint8_t>::const_iterator>;
+
+auto encode_packet(PacketId packet_id, DeviceId device_id, const std::vector<std::uint8_t> & payload)
+  -> std::vector<std::uint8_t>;
 
 }  // namespace teensy::protocol
