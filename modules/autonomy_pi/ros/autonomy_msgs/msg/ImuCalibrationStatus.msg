@@ -2,16 +2,10 @@
 
 std_msgs/Header header
 
-uint8 STATE_IDLE=0
-uint8 STATE_CALIBRATING=1
-
 uint8 ACCURACY_UNRELIABLE=0
 uint8 ACCURACY_LOW=1
 uint8 ACCURACY_MEDIUM=2
 uint8 ACCURACY_HIGH=3
-
-# Whether the sensor is idle or currently running the calibration motion sequence.
-uint8 state
 
 # The accelerometer's dynamic calibration accuracy.
 uint8 accelerometer_accuracy

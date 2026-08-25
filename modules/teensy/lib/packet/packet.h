@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include <array>
 #include <optional>
 
 #include "device_id.h"
@@ -27,7 +28,7 @@ struct Packet
 {
   PacketId packet_id;
   DeviceId device_id;
-  uint8_t payload[MAX_PAYLOAD_SIZE];
+  std::array<uint8_t, MAX_PAYLOAD_SIZE> payload;
   size_t size;
 };
 

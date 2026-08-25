@@ -79,7 +79,7 @@ auto TeensyDriver::on_configure(const rclcpp_lifecycle::State & /*previous_state
   });
 
   client_->register_callback(protocol::PacketId::CAL_STATUS, [this](protocol::Packet packet) {
-    if (packet.payload.size() != 12) {
+    if (packet.payload.size() != 9) {
       RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 5000, "Received a CAL_STATUS packet with an unexpected payload size");
       return;
@@ -89,7 +89,6 @@ auto TeensyDriver::on_configure(const rclcpp_lifecycle::State & /*previous_state
     msg.header.frame_id = params_.frame_id;
     msg.header.stamp = get_clock()->now();
 
-    msg.state = packet.pop_front<std::uint8_t>();
     msg.accelerometer_accuracy = packet.pop_front<std::uint8_t>();
     msg.gyroscope_accuracy = packet.pop_front<std::uint8_t>();
     msg.magnetometer_accuracy = packet.pop_front<std::uint8_t>();
@@ -99,9 +98,6 @@ auto TeensyDriver::on_configure(const rclcpp_lifecycle::State & /*previous_state
     msg.accelerometer_calibration_enabled = (cal_config & 0x01) != 0;
     msg.gyroscope_calibration_enabled = (cal_config & 0x02) != 0;
     msg.magnetometer_calibration_enabled = (cal_config & 0x04) != 0;
-
-    packet.pop_front<std::uint8_t>();  // last_result
-    packet.pop_front<std::uint8_t>();  // reserved padding byte
 
     msg.orientation_accuracy_rad = packet.pop_front<float>();
 

@@ -4,7 +4,7 @@
 // MIRRORED IN modules/autonomy_pi/ros/autonomy_teensy/include/autonomy_teensy/command.hpp
 // keep in sync
 
-#include <stdint.h>
+#include <cstdint>
 
 namespace packet
 {

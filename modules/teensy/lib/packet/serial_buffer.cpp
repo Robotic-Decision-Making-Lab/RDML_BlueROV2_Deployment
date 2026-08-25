@@ -3,42 +3,33 @@
 namespace packet
 {
 
-auto SerialBuffer::push(uint8_t byte) -> void
+auto SerialBuffer::push(uint8_t byte) -> bool
 {
-  // a completed frame is waiting to be consumed - don't overwrite it until empty() is called
-  if (state_ == State::READY) {
-    return;
-  }
-
   if (byte == 0x00) {
-    if (state_ == State::OVERFLOWED || len_ == 0) {
-      // an empty or overflowed frame carries no information - drop it and resync
-      len_ = 0;
-      state_ = State::READING;
-      return;
+    const bool have_frame = len_ > 0 && !overflowed_;
+    if (!have_frame) {
+      reset();
     }
-    state_ = State::READY;
-    return;
+    return have_frame;
   }
 
-  if (len_ >= sizeof(buffer_)) {
-    state_ = State::OVERFLOWED;
-    return;
+  if (len_ >= buffer_.size()) {
+    overflowed_ = true;
+    return false;
   }
 
   buffer_[len_++] = byte;
+  return false;
 }
 
-auto SerialBuffer::ready() const -> bool { return state_ == State::READY; }
-
-auto SerialBuffer::data() const -> const uint8_t * { return buffer_; }
+auto SerialBuffer::data() const -> const uint8_t * { return buffer_.data(); }
 
 auto SerialBuffer::size() const -> size_t { return len_; }
 
-auto SerialBuffer::empty() -> void
+auto SerialBuffer::reset() -> void
 {
   len_ = 0;
-  state_ = State::READING;
+  overflowed_ = false;
 }
 
 }  // namespace packet
