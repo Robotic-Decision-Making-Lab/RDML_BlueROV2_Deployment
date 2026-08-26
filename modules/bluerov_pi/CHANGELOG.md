@@ -1,5 +1,7 @@
 # Changelog for module bluerov_pi
 
+## 0.2.0
+
 ## 0.1.0
 
 - Initial project release.

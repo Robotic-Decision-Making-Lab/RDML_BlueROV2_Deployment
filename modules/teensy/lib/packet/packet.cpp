@@ -1,5 +1,7 @@
 #include "packet.h"
 
+#include <array>
+
 #include "cobs.h"
 #include "crc.h"
 
@@ -21,7 +23,7 @@ auto encode(const Packet & packet, uint8_t * out, size_t out_size) -> ssize_t
     return -1;
   }
 
-  uint8_t frame[MAX_FRAME_SIZE];
+  std::array<uint8_t, MAX_FRAME_SIZE> frame{};
   frame[0] = static_cast<uint8_t>(packet.packet_id);
   frame[1] = static_cast<uint8_t>(packet.device_id);
   for (size_t i = 0; i < packet.size; i++) {
@@ -29,9 +31,9 @@ auto encode(const Packet & packet, uint8_t * out, size_t out_size) -> ssize_t
   }
 
   const size_t frame_size = HEADER_SIZE + packet.size;
-  frame[frame_size] = calculate_crc(frame, frame_size);
+  frame[frame_size] = calculate_crc(frame.data(), frame_size);
 
-  const ssize_t encoded_size = encode_cobs(frame, frame_size + CRC_SIZE, out, out_size - 1);
+  const ssize_t encoded_size = encode_cobs(frame.data(), frame_size + CRC_SIZE, out, out_size - 1);
   if (encoded_size < 0) {
     return -1;
   }
@@ -39,6 +41,35 @@ auto encode(const Packet & packet, uint8_t * out, size_t out_size) -> ssize_t
   out[encoded_size] = 0x00;
 
   return encoded_size + 1;
+}
+
+auto decode(const uint8_t * data, size_t size) -> std::optional<Packet>
+{
+  std::array<uint8_t, MAX_FRAME_SIZE> decoded{};
+  const ssize_t decoded_size = decode_cobs(data, size, decoded.data(), decoded.size());
+
+  if (decoded_size < 0 || static_cast<size_t>(decoded_size) < HEADER_SIZE + CRC_SIZE) {
+    return std::nullopt;
+  }
+
+  const size_t body_size = static_cast<size_t>(decoded_size) - CRC_SIZE;
+  const uint8_t expected_crc = calculate_crc(decoded.data(), body_size);
+  const uint8_t actual_crc = decoded[body_size];
+
+  if (actual_crc != expected_crc) {
+    return std::nullopt;
+  }
+
+  Packet out{};
+  out.packet_id = static_cast<PacketId>(decoded[0]);
+  out.device_id = static_cast<DeviceId>(decoded[1]);
+  out.size = body_size - HEADER_SIZE;
+
+  for (size_t i = 0; i < out.size; i++) {
+    out.payload[i] = decoded[HEADER_SIZE + i];
+  }
+
+  return out;
 }
 
 }  // namespace packet

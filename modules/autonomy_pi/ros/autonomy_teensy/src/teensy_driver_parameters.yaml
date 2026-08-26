@@ -66,3 +66,21 @@ teensy_driver:
     read_only: true
     validation:
       fixed_size<>: 3
+
+  command_timeout:
+    type: double
+    default_value: 0.5
+    description: >-
+      How long to wait, in seconds, for a COMMAND_RESPONSE from the Teensy before retrying a
+      calibration command.
+    read_only: true
+    validation:
+      gt<>: 0.0
+
+  command_retries:
+    type: int
+    default_value: 3
+    description: The number of times to retry a calibration command before reporting failure.
+    read_only: true
+    validation:
+      gt<>: 0

@@ -1,6 +1,9 @@
 #ifndef PACKET_ID_H_
 #define PACKET_ID_H_
 
+// MIRRORED IN modules/autonomy_pi/ros/autonomy_teensy/include/autonomy_teensy/packet_id.hpp
+// keep in sync
+
 #include <stdint.h>
 
 namespace packet
@@ -10,6 +13,9 @@ namespace packet
 enum class PacketId : uint8_t
 {
   IMU_DATA = 0x01,
+  CAL_STATUS = 0x02,
+  COMMAND = 0x10,
+  COMMAND_RESPONSE = 0x11,
 };
 
 }  // namespace packet

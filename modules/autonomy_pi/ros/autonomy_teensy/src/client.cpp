@@ -5,6 +5,7 @@
 #include <array>
 #include <boost/asio/buffer.hpp>
 #include <boost/asio/serial_port_base.hpp>
+#include <boost/asio/write.hpp>
 #include <boost/system/error_code.hpp>
 #include <ranges>
 #include <stdexcept>
@@ -47,6 +48,27 @@ auto Client::register_callback(PacketId packet_id, std::function<void(const Pack
   callbacks_[packet_id].push_back(std::move(callback));
 }
 
+auto Client::send(const std::vector<std::uint8_t> & frame) -> bool
+{
+  if (!connected_) {
+    return false;
+  }
+
+  const std::lock_guard<std::mutex> lock(write_lock_);
+
+  boost::system::error_code ec;
+  boost::asio::write(port_, boost::asio::buffer(frame), ec);
+
+  if (ec) {
+    connected_ = false;
+    return false;
+  }
+
+  return true;
+}
+
+auto Client::connected() const -> bool { return connected_; }
+
 auto Client::read_from_socket() -> std::vector<std::uint8_t>
 {
   pollfd pfd{.fd = port_.native_handle(), .events = POLLIN, .revents = 0};
@@ -80,6 +102,7 @@ auto Client::poll_connection() -> void
       data = read_from_socket();
     }
     catch (const std::runtime_error &) {
+      connected_ = false;
       break;  // we can't recover from I/O errors, so just break
     }
 
