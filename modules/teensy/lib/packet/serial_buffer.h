@@ -11,15 +11,20 @@
 namespace packet
 {
 
+/// accumulates incoming bytes into a single COBS-encoded frame
 class SerialBuffer
 {
 public:
+  /// append a byte, returning true once a complete, non-overflowed frame is buffered
   [[nodiscard]] auto push(uint8_t byte) -> bool;
 
+  /// get a pointer to the buffered frame data, excluding the delimiter
   [[nodiscard]] auto data() const -> const uint8_t *;
 
+  /// get the number of bytes currently buffered, excluding the delimiter
   [[nodiscard]] auto size() const -> size_t;
 
+  /// clear the buffer to start accumulating a new frame
   auto reset() -> void;
 
 private:

@@ -12,10 +12,10 @@ namespace packet
 /// identifier for the packet payload data
 enum class PacketId : uint8_t
 {
-  IMU_DATA = 0x01,          // Teensy -> Pi
-  CAL_STATUS = 0x02,        // Teensy -> Pi
-  COMMAND = 0x10,           // Pi -> Teensy
-  COMMAND_RESPONSE = 0x11,  // Teensy -> Pi
+  IMU_DATA = 0x01,
+  CAL_STATUS = 0x02,
+  COMMAND = 0x10,
+  COMMAND_RESPONSE = 0x11,
 };
 
 }  // namespace packet
