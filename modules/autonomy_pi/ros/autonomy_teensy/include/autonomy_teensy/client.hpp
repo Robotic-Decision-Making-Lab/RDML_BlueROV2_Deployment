@@ -25,6 +25,10 @@ public:
 
   auto register_callback(PacketId packet_id, std::function<void(const Packet &)> callback) -> void;
 
+  [[nodiscard]] auto send(const std::vector<std::uint8_t> & frame) -> bool;
+
+  [[nodiscard]] auto connected() const -> bool;
+
 private:
   auto poll_connection() -> void;
 
@@ -37,6 +41,9 @@ private:
 
   std::thread read_thread_;
   std::atomic<bool> running_{true};
+  std::atomic<bool> connected_{true};
+
+  std::mutex write_lock_;
 
   std::vector<std::uint8_t> accumulated_;
 

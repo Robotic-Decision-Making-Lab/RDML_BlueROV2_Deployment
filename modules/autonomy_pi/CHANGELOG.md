@@ -1,5 +1,11 @@
 # Changelog for module autonomy_pi
 
+## 0.2.0
+
+- Implements the `autonomy_msgs` package, starting with `ImuCalibrationStatus`.
+- Implements a calibration interface for the autonomy bottle IMU.
+- Adds the `calibrate-imu` alias to simplify the calibration procedure.
+
 ## 0.1.0
 
 - Initial project release.

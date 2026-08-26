@@ -72,4 +72,24 @@ auto decode_packets(const std::vector<std::uint8_t> & data)
   return {packets, start};
 }
 
+auto encode_packet(PacketId packet_id, DeviceId device_id, const std::vector<std::uint8_t> & payload)
+  -> std::vector<std::uint8_t>
+{
+  if (payload.size() > MAX_PAYLOAD_SIZE) {
+    throw std::invalid_argument("The payload exceeds the maximum payload size.");
+  }
+
+  std::vector<std::uint8_t> body;
+  body.reserve(HEADER_SIZE + payload.size());
+  body.push_back(static_cast<std::uint8_t>(packet_id));
+  body.push_back(static_cast<std::uint8_t>(device_id));
+  body.insert(body.end(), payload.begin(), payload.end());
+  body.push_back(calculate_crc(body));
+
+  std::vector<std::uint8_t> frame = encode_cobs(body);
+  frame.push_back(PACKET_DELIMITER);
+
+  return frame;
+}
+
 }  // namespace teensy::protocol

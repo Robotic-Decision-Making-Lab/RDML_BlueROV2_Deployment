@@ -105,11 +105,15 @@ sudo apt-get update \
 # be configured on install, so this is fine
 sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
   && echo "alias reset-ekf='$AUTONOMY_PI/scripts/reset_ekf.sh'" >> ~/.bashrc \
+  && sudo chmod +x $AUTONOMY_PI/scripts/calibrate_imu.py \
+  && echo "alias calibrate-imu='$AUTONOMY_PI/scripts/calibrate_imu.py'" >> ~/.bashrc \
   && echo "alias wks='cd $USER_WORKSPACE'" >> ~/.bashrc \
   && echo "alias cbs='colcon build && source install/setup.bash'" >> ~/.bashrc \
   && source ~/.bashrc
 
 # configure the uart pins so that we can stream serial data from the teensy
+#
+# this will get placed in the [all] section
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 
 # configure user access to the I2C devices
@@ -123,6 +127,13 @@ echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 #   sudo systemctl disable serial-getty@ttyAMA0.service
 #   sudo systemctl mask serial-getty@ttyAMA0.service
 sudo usermod -aG dialout $USER
+
+# disable sysrq
+#
+# for some reason this gets assigned to ttyAMA0 on the Pi 5? the simple solution is to
+# disable it. you could also probably move to a different serial port on the Pi, but I
+# don't really feel like doing that :D
+echo 'kernel.sysrq=0' | sudo tee /etc/sysctl.d/99-disable-sysrq.conf
 
 # Configure systemd to run the ROS stack on boot
 # sudo cp $AUTONOMY_PI/scripts/launch.sh /usr/local/bin \

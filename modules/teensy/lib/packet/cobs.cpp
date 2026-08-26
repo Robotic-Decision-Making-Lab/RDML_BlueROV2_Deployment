@@ -37,4 +37,38 @@ auto encode_cobs(const uint8_t * data, size_t size, uint8_t * out, size_t out_si
   return static_cast<ssize_t>(write);
 }
 
+auto decode_cobs(const uint8_t * data, size_t size, uint8_t * out, size_t out_size) -> ssize_t
+{
+  size_t write = 0;
+
+  for (size_t read = 0; read < size;) {
+    const uint8_t code = data[read++];
+
+    // a 0x00 code byte can only appear as the frame delimiter, which callers must strip before
+    // calling this function - encountering one here means the frame is corrupted
+    if (code == 0x00) {
+      return -1;
+    }
+
+    for (uint8_t n = 1; n < code; n++) {
+      if (read >= size) {
+        return -1;  // the code byte claims more data bytes than are present
+      }
+      if (write >= out_size) {
+        return -1;
+      }
+      out[write++] = data[read++];
+    }
+
+    if (code != 0xFF && read < size) {
+      if (write >= out_size) {
+        return -1;
+      }
+      out[write++] = 0x00;
+    }
+  }
+
+  return static_cast<ssize_t>(write);
+}
+
 }  // namespace packet
