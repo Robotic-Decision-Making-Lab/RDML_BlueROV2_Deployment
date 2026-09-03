@@ -14,9 +14,11 @@ sudo apt-get update \
 cd ~ \
   && git clone git@github.com:Robotic-Decision-Making-Lab/RDML_BlueROV2_Deployment.git
 
+export REPO_ROOT=/home/$USER/RDML_BlueROV2_Deployment
+export BLUEROV_PI=$REPO_ROOT/modules/bluerov_pi
+
 # configure the default gateway for the Ethernet interface
-sudo cp ~/RDML_BlueROV2_Deployment/modules/bluerov_pi/network/eth0.network /etc/systemd/network/ \
-  && sudo systemctl restart systemd-networkd
+echo "alias nat='$AUTONOMY_PI/scripts/nat.sh'" >> ~/.bashrc \
 
 # setup the ROS systemd service
 #
