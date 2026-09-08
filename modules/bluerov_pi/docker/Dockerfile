@@ -1,5 +1,5 @@
 ARG ROS_DISTRO=lyrical
-FROM ros:${ROS_DISTRO}-ros-base AS robot
+FROM ros:${ROS_DISTRO}-ros-base
 
 ENV DEBIAN_FRONTEND=noninteractive
 
