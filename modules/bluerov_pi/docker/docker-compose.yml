@@ -3,6 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    platform: linux/arm64
     network_mode: host
     # uncomment the following for interactive mode
     command: tail -f /dev/null
