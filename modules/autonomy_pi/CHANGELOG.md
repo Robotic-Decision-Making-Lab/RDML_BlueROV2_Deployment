@@ -1,5 +1,7 @@
 # Changelog for module autonomy_pi
 
+## 0.2.1
+
 ## 0.2.0
 
 - Implements the `autonomy_msgs` package, starting with `ImuCalibrationStatus`.
