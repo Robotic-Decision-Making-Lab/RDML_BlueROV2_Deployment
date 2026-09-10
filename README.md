@@ -126,7 +126,7 @@ flowchart LR
 ### BlueOS Configuration
 
 - ArduSub: vX.X.X <!-- TODO: confirm flashed version -->
-- BlueOS's MAVLink router is configured with an additional UDP endpoint, in the **MAVLink
+- BlueOS's MAVLink router is configured with an additional UDP endpoint (UDP Client), in the **MAVLink
   Endpoints** page, targeting `127.0.0.1:14755`. This mirrors the flight controller's MAVLink
   stream to the `mavros_node` container (`network_mode: host`), which listens on that port per
   its `fcu_url` in [`mavros.yaml`](modules/bluerov_pi/docker/mavros.yaml).
