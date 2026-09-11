@@ -11,27 +11,35 @@ controller_manager:
     thruster_allocation_matrix_controller:
       type: thruster_allocation_matrix_controller/ThrusterAllocationMatrixController
 
+    # front-right (bottom)
     thruster1_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # front-left (bottom)
     thruster2_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # back-right (bottom)
     thruster3_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # back-left (bottom)
     thruster4_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # front-right (top)
     thruster5_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # front-left (top)
     thruster6_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # back-right (top)
     thruster7_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
+    # back-left (top)
     thruster8_controller:
       type: thruster_controllers/PolynomialThrustCurveController
 
