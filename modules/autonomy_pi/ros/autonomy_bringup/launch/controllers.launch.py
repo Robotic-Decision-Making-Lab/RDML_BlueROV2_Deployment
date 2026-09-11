@@ -29,19 +29,19 @@ from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description() -> LaunchDescription:
+    controllers_file = PathJoinSubstitution(
+        [
+            FindPackageShare("autonomy_description"),
+            "config",
+            "controllers.yaml",
+        ]
+    )
+
     controller_manager = Node(
         package="controller_manager",
         executable="ros2_control_node",
         output="both",
-        parameters=[
-            PathJoinSubstitution(
-                [
-                    FindPackageShare("autonomy_description"),
-                    "config",
-                    "controllers.yaml",
-                ]
-            ),
-        ],
+        parameters=[controllers_file],
     )
 
     def make_controller_args(
@@ -50,6 +50,7 @@ def generate_launch_description() -> LaunchDescription:
         cm = ["--controller-manager", ["", "controller_manager"]]
         controller_timeout = ["--controller-manager-timeout", "120"]
         switch_timeout = ["--switch-timeout", "100"]
+        param_file = ["--param-file", controllers_file]
         inactive = ["--inactive"] if not active else []
         remap = (
             itertools.chain(
@@ -58,7 +59,15 @@ def generate_launch_description() -> LaunchDescription:
             if remappings
             else []
         )
-        commands = [name, *cm, *controller_timeout, *switch_timeout, *inactive, *remap]
+        commands = [
+            name,
+            *cm,
+            *controller_timeout,
+            *switch_timeout,
+            *param_file,
+            *inactive,
+            *remap,
+        ]
         return commands
 
     vehicle_state = "/vehicle/odometry/filtered"

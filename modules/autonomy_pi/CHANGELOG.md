@@ -2,6 +2,8 @@
 
 ## 0.2.1
 
+- Fixes parameter passing for `controllers.launch.py`.
+
 ## 0.2.0
 
 - Implements the `autonomy_msgs` package, starting with `ImuCalibrationStatus`.
