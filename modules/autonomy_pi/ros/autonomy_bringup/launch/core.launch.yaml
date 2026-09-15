@@ -10,8 +10,8 @@ launch:
       value: $(command 'xacro $(var description_file)')
 
   - let:
-      name: routes_file
-      value: $(find-pkg-share autonomy_description)/config/routes.yaml
+      name: bme680_file
+      value: $(find-pkg-share bme680_driver)/config/bme680.yaml
 
   - node:
       pkg: bme680_driver

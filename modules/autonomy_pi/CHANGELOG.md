@@ -6,6 +6,7 @@
 - Re-expresses the thruster allocation matrix in the FLU frame and corrects the
   `reverse_spin_direction` flags so that thruster behavior matches the
   previously validated configuration.
+- Fixes bugs in the launch files.
 
 ## 0.2.0
 

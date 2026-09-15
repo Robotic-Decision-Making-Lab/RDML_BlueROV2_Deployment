@@ -14,6 +14,10 @@ launch:
       name: teensy_file
       value: $(find-pkg-share autonomy_description)/config/teensy.yaml
 
+  - let:
+      name: routes_file
+      value: $(find-pkg-share autonomy_description)/config/routes.yaml
+
   # we remap the state estimator topic to a vehicle-specific topic to handle
   # scenarios where there are multiple estimators running (e.g., object detection)
   - node:
@@ -26,6 +30,12 @@ launch:
       remap:
         - from: /odometry/filtered
           to: /vehicle/odometry/filtered
+
+  - node:
+      pkg: autonomy_routers
+      exec: bar30_router
+      param:
+        - from: $(var routes_file)
 
   - include:
       file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
