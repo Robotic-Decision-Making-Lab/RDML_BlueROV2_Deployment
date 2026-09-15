@@ -1,7 +1,7 @@
 vehicle_ekf:
     ros__parameters:
         frequency: 50.0
-        sensor_timeout: 1.0
+        sensor_timeout: 2.0
         publish_tf: true
 
         odom_frame: odom
@@ -16,10 +16,14 @@ vehicle_ekf:
                         false, false, false]
         twist0_differential: false
         twist0_relative: false
-        twist0_queue_size: 2
+        twist0_queue_size: 10
         twist0_nodelay: true
+        # Reject single-sample outliers (e.g. DVL multipath/beam dropouts) instead of fusing them
+        # directly. Units are Mahalanobis distance; 0.2 matches robot_localization's own shipped
+        # example config for a twist source - treat as a starting point to iterate on.
+        twist0_rejection_threshold: 0.2
 
-        pose0: /bar30/depth
+        pose0: /vehicle/depth
         pose0_config: [false, false,  true,
                        false, false, false,
                        false, false, false,
@@ -29,6 +33,9 @@ vehicle_ekf:
         pose0_relative: false
         pose0_queue_size: 5
         pose0_nodelay: true
+        # Reject single-sample depth outliers instead of fusing them directly. 2.0 matches
+        # robot_localization's own shipped example config for a pose source.
+        pose0_rejection_threshold: 2.0
 
         imu0: /vehicle/imu01
         imu0_config: [false, false, false,

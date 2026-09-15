@@ -8,5 +8,10 @@ bar30_router:
     # state estimators should use this topic for depth estimation.
     outgoing_topic: /vehicle/depth
 
-    # the frame ID of the Bar 30 sensor.
-    frame_id: "bar30_link"
+    # The frame the reported depth is expressed relative to. Depth is an absolute, world-vertical
+    # quantity derived from pressure (not a point in the sensor's own moving mounting frame), so
+    # this must be a world-fixed frame that robot_localization can resolve without needing its own
+    # output (i.e. the EKF's world_frame/odom_frame) - NOT the "bar30" body/sensor frame. Using a
+    # body frame here creates a circular dependency (odom -> base_link -> bar30, where odom ->
+    # base_link is produced by the same EKF consuming this measurement) that destabilizes the filter.
+    frame_id: "odom"

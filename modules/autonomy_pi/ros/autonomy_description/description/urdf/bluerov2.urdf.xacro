@@ -36,7 +36,7 @@
     </joint>
 
     <joint name="${prefix}bno08x_joint" type="fixed">
-      <origin rpy="0 0 -1.57079633" xyz="0.029369 0.02235 -0.115472" />
+      <origin rpy="0 0 1.57079633" xyz="0.029369 0.02235 -0.115472" />
       <parent link="${prefix}base_link" />
       <child link="${prefix}bno08x" />
     </joint>
