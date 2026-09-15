@@ -1,5 +1,12 @@
 # Changelog for module autonomy_pi
 
+## 0.2.1
+
+- Fixes parameter passing for `controllers.launch.py`.
+- Re-expresses the thruster allocation matrix in the FLU frame and corrects the
+  `reverse_spin_direction` flags so that thruster behavior matches the
+  previously validated configuration.
+
 ## 0.2.0
 
 - Implements the `autonomy_msgs` package, starting with `ImuCalibrationStatus`.
