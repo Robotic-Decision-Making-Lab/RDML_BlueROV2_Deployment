@@ -1,7 +1,6 @@
 #include "autonomy_teensy/driver.hpp"
 
 #include <chrono>
-#include <rclcpp/create_publisher.hpp>
 #include <vector>
 
 #include "autonomy_teensy/client.hpp"
@@ -36,16 +35,25 @@ auto TeensyDriver::on_configure(const rclcpp_lifecycle::State & /*previous_state
   // in the future we might want to set the topic dynamically using the packets subscribed to
   imu_pub_ = create_publisher<sensor_msgs::msg::Imu>("imu01", rclcpp::SystemDefaultsQoS());
 
+  calib_pub_ =
+    create_publisher<autonomy_msgs::msg::ImuCalibrationStatus>("~/calibration_status", rclcpp::SystemDefaultsQoS());
+
   try {
     client_ = std::make_unique<protocol::Client>(params_.port, static_cast<int>(params_.baudrate));
   }
   catch (const std::exception & e) {
     RCLCPP_ERROR(get_logger(), "Failed to open the Teensy serial connection: %s", e.what());  // NOLINT
     imu_pub_.reset();
+    calib_pub_.reset();
     return CallbackReturn::ERROR;
   }
 
   client_->register_callback(protocol::PacketId::IMU_DATA, [this](protocol::Packet packet) {
+    // the Teensy streams continuously, so packets can arrive before the node is activated
+    if (!imu_pub_->is_activated()) {
+      return;
+    }
+
     if (packet.payload.size() != 40) {
       RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 5000, "Received an IMU_DATA packet with an unexpected payload size");
@@ -79,6 +87,10 @@ auto TeensyDriver::on_configure(const rclcpp_lifecycle::State & /*previous_state
   });
 
   client_->register_callback(protocol::PacketId::CAL_STATUS, [this](protocol::Packet packet) {
+    if (!calib_pub_->is_activated()) {
+      return;
+    }
+
     if (packet.payload.size() != 9) {
       RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 5000, "Received a CAL_STATUS packet with an unexpected payload size");
@@ -120,9 +132,6 @@ auto TeensyDriver::on_configure(const rclcpp_lifecycle::State & /*previous_state
     }
   });
 
-  calib_pub_ = rclcpp::create_publisher<autonomy_msgs::msg::ImuCalibrationStatus>(
-    *this, "~/calibration_status", rclcpp::SystemDefaultsQoS());
-
   start_cal_srv_ = create_service<std_srvs::srv::Trigger>(
     "~/start_calibration",
     [this](const std_srvs::srv::Trigger::Request::SharedPtr, std_srvs::srv::Trigger::Response::SharedPtr response) {
@@ -149,6 +158,7 @@ auto TeensyDriver::on_activate(const rclcpp_lifecycle::State & /*previous_state*
 {
   RCLCPP_INFO(get_logger(), "Activating the TeensyDriver");
   imu_pub_->on_activate();
+  calib_pub_->on_activate();
   return CallbackReturn::SUCCESS;
 }
 
@@ -156,6 +166,7 @@ auto TeensyDriver::on_deactivate(const rclcpp_lifecycle::State & /*previous_stat
 {
   RCLCPP_INFO(get_logger(), "Deactivating the TeensyDriver");
   imu_pub_->on_deactivate();
+  calib_pub_->on_deactivate();
   return CallbackReturn::SUCCESS;
 }
 
