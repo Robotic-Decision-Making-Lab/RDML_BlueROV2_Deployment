@@ -39,6 +39,9 @@ launch:
 
     - include:
           file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
+          arg:
+              - name: parameters_file
+                value: $(var dvl_file)
 
     - group:
           - set_remap:
