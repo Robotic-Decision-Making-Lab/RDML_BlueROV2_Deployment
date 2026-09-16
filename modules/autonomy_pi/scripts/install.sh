@@ -135,7 +135,55 @@ sudo usermod -aG dialout $USER
 # don't really feel like doing that :D
 echo 'kernel.sysrq=0' | sudo tee /etc/sysctl.d/99-disable-sysrq.conf
 
-# Configure systemd to run the ROS stack on boot
-# sudo cp $AUTONOMY_PI/scripts/launch.sh /usr/local/bin \
-#   && cp $AUTONOMY_PI/services/ros.service /etc/systemd/system \
-#   && sudo systemctl enable ros.service
+# install docker, which is used to run the autonomy stack on boot
+#
+# the stack is split across three containers (core, estimation, controllers) so that any
+# one of them can be left out; see docker/docker-compose.yml.
+curl -fsSL https://get.docker.com | sh \
+  && sudo systemctl enable docker \
+  && sudo systemctl start docker
+
+# add your user to the `docker` group
+#
+# log out and back in (or run `newgrp docker`) for this to take effect
+sudo usermod -aG docker $USER
+
+# record the host GID that the core container needs supplementary access to
+#
+# /dev/i2c-1 (BME680) is owned by the host's i2c group, and that GID is not stable
+# across distributions or images, so it is resolved here rather than hard-coded.
+echo "I2C_GID=$(getent group i2c | cut -d: -f3)" > $AUTONOMY_PI/docker/.env
+
+# the containers mount ~/.ros so that ROS logs survive a container being recreated.
+# create it up front: docker would otherwise create the bind mount source as root and
+# the container user (uid 1000) would not be able to write to it.
+mkdir -p $HOME/.ros
+
+# build the container image
+#
+# the launch files are static in deployment, so the workspace is built into the image
+# rather than mounted from the host. re-run `autonomy build` after changing any package
+# under ros/ or bumping deps.repos.
+sudo docker compose -f $AUTONOMY_PI/docker/docker-compose.yml build
+
+# setup the stack management alias
+#
+# `autonomy` wraps docker compose for this module (see `autonomy -h`)
+sudo chmod +x $AUTONOMY_PI/scripts/autonomy.sh \
+  && echo "alias autonomy='$AUTONOMY_PI/scripts/autonomy.sh'" >> ~/.bashrc \
+  && source ~/.bashrc
+
+# configure systemd to run the ROS stack on boot
+#
+# the three units are ordered core -> estimation -> controllers but do not require each
+# other, so any one of them can be dropped with `sudo systemctl disable ros-<name>`.
+#
+# the repository path is baked into the unit files at install time, so re-run this
+# script if the repository is ever moved
+for unit in ros-core ros-estimation ros-controllers; do
+  sed "s|__REPO_ROOT__|$REPO_ROOT|g" $AUTONOMY_PI/services/$unit.service \
+    | sudo tee /etc/systemd/system/$unit.service > /dev/null
+done
+
+sudo systemctl daemon-reload \
+  && sudo systemctl enable ros-core.service ros-estimation.service ros-controllers.service

@@ -1,0 +1,15 @@
+[Unit]
+Description=Launch the autonomy core stack
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker compose -f __REPO_ROOT__/modules/autonomy_pi/docker/docker-compose.yml up --detach --no-deps --wait --wait-timeout 180 core
+ExecStop=/usr/bin/docker compose -f __REPO_ROOT__/modules/autonomy_pi/docker/docker-compose.yml stop core
+TimeoutStartSec=240
+
+[Install]
+WantedBy=multi-user.target

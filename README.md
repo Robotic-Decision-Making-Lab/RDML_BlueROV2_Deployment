@@ -135,7 +135,8 @@ flowchart LR
 
 - ROS 2 Lyrical
 - MAVROS is loaded by default on the `bluerov_pi` via [service](modules/bluerov_pi/services/ros.service)
-- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](modules/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](modules/autonomy_pi/ros/autonomy_bringup)
+- The core autonomy stack, including transforms, state estimation, and control
+  are loaded by default on the `autonomy_pi` via [service](modules/autonomy_pi/services/)
 
 ---
 
@@ -146,6 +147,7 @@ system dependencies, and systemd services:
 
 - `bluerov_pi`: [`modules/bluerov_pi/scripts/install.sh`](modules/bluerov_pi/scripts/install.sh)
 - `autonomy_pi`: [`modules/autonomy_pi/scripts/install.sh`](modules/autonomy_pi/scripts/install.sh)
+- `jetson`: [`modules/jetson/scripts/install.sh`](modules/jetson/scripts/install.sh)
 
 The Teensy firmware is built and flashed with [PlatformIO](https://platformio.org/):
 

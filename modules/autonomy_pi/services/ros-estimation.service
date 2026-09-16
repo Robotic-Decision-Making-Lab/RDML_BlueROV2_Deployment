@@ -1,0 +1,15 @@
+[Unit]
+Description=Launch the autonomy state estimation stack
+Requires=docker.service
+After=docker.service network-online.target ros-core.service dev-ttyAMA0.device
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker compose -f __REPO_ROOT__/modules/autonomy_pi/docker/docker-compose.yml up --detach --no-deps --wait --wait-timeout 180 estimation
+ExecStop=/usr/bin/docker compose -f __REPO_ROOT__/modules/autonomy_pi/docker/docker-compose.yml stop estimation
+TimeoutStartSec=240
+
+[Install]
+WantedBy=multi-user.target

@@ -2,6 +2,8 @@
 
 ## 0.2.1
 
+- Adds systemd services to run the state estimation and control stack on boot.
+- Fixes errors in the `install.sh` and `calibrate_imu.py` scripts.
 - Fixes parameter passing for `controllers.launch.py`.
 - Re-expresses the thruster allocation matrix in the FLU frame and corrects the
   `reverse_spin_direction` flags so that thruster behavior matches the
