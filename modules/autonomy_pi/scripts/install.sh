@@ -160,26 +160,9 @@ echo "I2C_GID=$(getent group i2c | cut -d: -f3)" > $AUTONOMY_PI/docker/.env
 mkdir -p $HOME/.ros
 
 # build the container image
-#
-# the launch files are static in deployment, so the workspace is built into the image
-# rather than mounted from the host. re-run `autonomy build` after changing any package
-# under ros/ or bumping deps.repos.
-sudo docker compose -f $AUTONOMY_PI/docker/docker-compose.yml build
-
-# setup the stack management alias
-#
-# `autonomy` wraps docker compose for this module (see `autonomy -h`)
-sudo chmod +x $AUTONOMY_PI/scripts/autonomy.sh \
-  && echo "alias autonomy='$AUTONOMY_PI/scripts/autonomy.sh'" >> ~/.bashrc \
-  && source ~/.bashrc
+sudo docker compose -f $AUTONOMY_PI/docker/docker-compose.yml build core
 
 # configure systemd to run the ROS stack on boot
-#
-# the three units are ordered core -> estimation -> controllers but do not require each
-# other, so any one of them can be dropped with `sudo systemctl disable ros-<name>`.
-#
-# the repository path is baked into the unit files at install time, so re-run this
-# script if the repository is ever moved
 for unit in ros-core ros-estimation ros-controllers; do
   sed "s|__REPO_ROOT__|$REPO_ROOT|g" $AUTONOMY_PI/services/$unit.service \
     | sudo tee /etc/systemd/system/$unit.service > /dev/null
