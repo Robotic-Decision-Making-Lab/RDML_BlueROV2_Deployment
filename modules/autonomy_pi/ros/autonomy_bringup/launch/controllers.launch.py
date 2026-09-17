@@ -149,6 +149,6 @@ def generate_launch_description() -> LaunchDescription:
             controller_coordinator_spawner,
             *delay_thruster_controller_spawners,
             delay_tam_controller_spawner_after_thruster_controller_spawners,
-            # delay_impedance_controller_spawner_after_tam_controller_spawner,
+            delay_impedance_controller_spawner_after_tam_controller_spawner,
         ]
     )

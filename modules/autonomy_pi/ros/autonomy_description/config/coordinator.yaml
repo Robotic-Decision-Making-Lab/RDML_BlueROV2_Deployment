@@ -13,4 +13,4 @@ controller_coordinator:
             - thruster7_controller
             - thruster8_controller
             - thruster_allocation_matrix_controller
-            # - impedance_controller
+            - impedance_controller
