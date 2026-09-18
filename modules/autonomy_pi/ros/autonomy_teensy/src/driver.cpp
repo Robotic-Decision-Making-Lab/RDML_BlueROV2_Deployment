@@ -159,6 +159,7 @@ auto TeensyDriver::on_activate(const rclcpp_lifecycle::State & /*previous_state*
   RCLCPP_INFO(get_logger(), "Activating the TeensyDriver");
   imu_pub_->on_activate();
   calib_pub_->on_activate();
+  RCLCPP_INFO(get_logger(), "Successfully activated the TeensyDriver");
   return CallbackReturn::SUCCESS;
 }
 
@@ -167,6 +168,7 @@ auto TeensyDriver::on_deactivate(const rclcpp_lifecycle::State & /*previous_stat
   RCLCPP_INFO(get_logger(), "Deactivating the TeensyDriver");
   imu_pub_->on_deactivate();
   calib_pub_->on_deactivate();
+  RCLCPP_INFO(get_logger(), "Successfully deactivated the TeensyDriver");
   return CallbackReturn::SUCCESS;
 }
 
