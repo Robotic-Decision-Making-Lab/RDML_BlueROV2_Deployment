@@ -1,54 +1,54 @@
 launch:
-    # this launch file launches the nodes needed for state estimation (e.g.,
-    # sensors and the estimator itself)
+  # this launch file launches the nodes needed for state estimation (e.g.,
+  # sensors and the estimator itself)
 
-    - let:
-          name: ekf_file
-          value: $(find-pkg-share autonomy_description)/config/ekf.yaml
+  - let:
+      name: ekf_file
+      value: $(find-pkg-share autonomy_description)/config/ekf.yaml
 
-    - let:
-          name: dvl_file
-          value: $(find-pkg-share autonomy_description)/config/dvl.yaml
+  - let:
+      name: dvl_file
+      value: $(find-pkg-share autonomy_description)/config/dvl.yaml
 
-    - let:
-          name: teensy_file
-          value: $(find-pkg-share autonomy_description)/config/teensy.yaml
+  - let:
+      name: teensy_file
+      value: $(find-pkg-share autonomy_description)/config/teensy.yaml
 
-    - let:
-          name: routes_file
-          value: $(find-pkg-share autonomy_description)/config/routes.yaml
+  - let:
+      name: routes_file
+      value: $(find-pkg-share autonomy_description)/config/routes.yaml
 
-    # we remap the state estimator topic to a vehicle-specific topic to handle
-    # scenarios where there are multiple estimators running (e.g., object detection)
-    - node:
-          pkg: robot_localization
-          exec: ekf_node
-          output: screen
-          name: vehicle_ekf
-          param:
-              - from: $(var ekf_file)
-          remap:
-              - from: /odometry/filtered
-                to: /vehicle/odometry/filtered
+  # we remap the state estimator topic to a vehicle-specific topic to handle
+  # scenarios where there are multiple estimators running (e.g., object detection)
+  - node:
+      pkg: robot_localization
+      exec: ekf_node
+      output: screen
+      name: vehicle_ekf
+      param:
+        - from: $(var ekf_file)
+      remap:
+        - from: /odometry/filtered
+          to: /vehicle/odometry/filtered
 
-    - node:
-          pkg: autonomy_routers
-          exec: bar30_router
-          param:
-              - from: $(var routes_file)
+  - node:
+      pkg: autonomy_routers
+      exec: bar30_router
+      param:
+        - from: $(var routes_file)
 
-    - include:
-          file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
+  - include:
+      file: $(find-pkg-share nucleus_driver)/launch/dvl.launch.py
+      arg:
+        - name: parameters_file
+          value: $(var dvl_file)
+
+  - group:
+      - set_remap:
+          from: imu01
+          to: /vehicle/imu01
+      - include:
+          file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
           arg:
-              - name: parameters_file
-                value: $(var dvl_file)
-
-    - group:
-          - set_remap:
-                from: imu01
-                to: /vehicle/imu01
-          - include:
-                file: $(find-pkg-share autonomy_teensy)/launch/teensy.launch.py
-                arg:
-                    - name: parameters_file
-                      value: $(var teensy_file)
+            - name: parameters_file
+              value: $(var teensy_file)
