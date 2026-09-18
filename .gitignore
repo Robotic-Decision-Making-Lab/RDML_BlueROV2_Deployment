@@ -7,5 +7,3 @@ COLCON_IGNORE*
 
 .cache
 .ruff_cache
-
-.env

@@ -1,15 +1,16 @@
 [Unit]
 Description=Launch the autonomy state estimation stack
-Requires=docker.service
-After=docker.service network-online.target ros-core.service dev-ttyAMA0.device
+After=network-online.target ros-core.service dev-ttyAMA0.device
 Wants=network-online.target
 
 [Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/bin/docker compose -f __REPO_ROOT__/modules/autonomy_pi/docker/docker-compose.yml up --detach --no-deps --wait --wait-timeout 180 estimation
-ExecStop=/usr/bin/docker compose -f __REPO_ROOT__/modules/autonomy_pi/docker/docker-compose.yml stop estimation
-TimeoutStartSec=240
+Type=simple
+User=__USER__
+ExecStart=__REPO_ROOT__/modules/autonomy_pi/scripts/ros_entrypoint.sh ros2 launch autonomy_bringup estimation.launch.yaml
+KillSignal=SIGINT
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=5
 
 [Install]
 WantedBy=multi-user.target

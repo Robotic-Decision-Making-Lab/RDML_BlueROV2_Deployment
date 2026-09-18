@@ -6,34 +6,17 @@ on:
       - main
     paths:
       - modules/bluerov_pi/docker/**
-      - modules/autonomy_pi/docker/**
-      - modules/autonomy_pi/ros/**
-      - modules/autonomy_pi/deps.repos
       - .github/workflows/docker.yml
   pull_request:
     paths:
       - modules/bluerov_pi/docker/**
-      - modules/autonomy_pi/docker/**
-      - modules/autonomy_pi/ros/**
-      - modules/autonomy_pi/deps.repos
       - .github/workflows/docker.yml
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build ${{ matrix.module }} image
+    name: Build Docker Image
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - module: bluerov_pi
-            context: modules/bluerov_pi/docker
-            file: modules/bluerov_pi/docker/Dockerfile
-          - module: autonomy_pi
-            context: modules/autonomy_pi
-            file: modules/autonomy_pi/docker/Dockerfile
-            build-args: MAKEFLAGS=-j4
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -44,7 +27,5 @@ jobs:
       - name: Build image
         uses: docker/build-push-action@v7
         with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.file }}
-          build-args: ${{ matrix.build-args }}
+          context: modules/bluerov_pi/docker
           push: false

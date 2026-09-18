@@ -22,7 +22,7 @@ sudo apt-get update \
 
 # install ROS 2
 #
-# See the ROS installation instructions for further information:
+# see the ROS installation instructions for further information:
 # https://docs.ros.org/en/lyrical/Installation/Ubuntu-Install-Debs.html
 sudo apt update \
   && sudo apt install locales \
@@ -116,7 +116,8 @@ sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
 # this will get placed in the [all] section
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 
-# configure user access to the I2C devices
+# configure user access to the serial and I2C devices (the Teensy on /dev/ttyAMA0 and
+# the BME680 on /dev/i2c-1)
 #
 # note that Ubuntu Server 26.04 enables serial-getty@ttyAMA0.service by default, which
 # can result in /dev/ttyAMA0 being owned by root:tty and no group access despite running
@@ -126,7 +127,7 @@ echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 # and disable it:
 #   sudo systemctl disable serial-getty@ttyAMA0.service
 #   sudo systemctl mask serial-getty@ttyAMA0.service
-sudo usermod -aG dialout $USER
+sudo usermod -aG dialout,i2c $USER
 
 # disable sysrq
 #
@@ -135,36 +136,13 @@ sudo usermod -aG dialout $USER
 # don't really feel like doing that :D
 echo 'kernel.sysrq=0' | sudo tee /etc/sysctl.d/99-disable-sysrq.conf
 
-# install docker, which is used to run the autonomy stack on boot
-#
-# the stack is split across three containers (core, estimation, controllers) so that any
-# one of them can be left out; see docker/docker-compose.yml.
-curl -fsSL https://get.docker.com | sh \
-  && sudo systemctl enable docker \
-  && sudo systemctl start docker
-
-# add your user to the `docker` group
-#
-# log out and back in (or run `newgrp docker`) for this to take effect
-sudo usermod -aG docker $USER
-
-# record the host GID that the core container needs supplementary access to
-#
-# /dev/i2c-1 (BME680) is owned by the host's i2c group, and that GID is not stable
-# across distributions or images, so it is resolved here rather than hard-coded.
-echo "I2C_GID=$(getent group i2c | cut -d: -f3)" > $AUTONOMY_PI/docker/.env
-
-# the containers mount ~/.ros so that ROS logs survive a container being recreated.
-# create it up front: docker would otherwise create the bind mount source as root and
-# the container user (uid 1000) would not be able to write to it.
-mkdir -p $HOME/.ros
-
-# build the container image
-sudo docker compose -f $AUTONOMY_PI/docker/docker-compose.yml build core
-
 # configure systemd to run the ROS stack on boot
+#
+# this will need to be re-configured if the repository is ever moved
+sudo chmod +x $AUTONOMY_PI/scripts/ros_entrypoint.sh
+
 for unit in ros-core ros-estimation ros-controllers; do
-  sed "s|__REPO_ROOT__|$REPO_ROOT|g" $AUTONOMY_PI/services/$unit.service \
+  sed -e "s|__REPO_ROOT__|$REPO_ROOT|g" -e "s|__USER__|$USER|g" $AUTONOMY_PI/services/$unit.service \
     | sudo tee /etc/systemd/system/$unit.service > /dev/null
 done
 
