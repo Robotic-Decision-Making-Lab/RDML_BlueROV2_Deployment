@@ -1,5 +1,7 @@
 # Changelog for module teensy
 
+## 0.2.1
+
 ## 0.2.0
 
 - Pushes the IMU implementation to an abstraction layer.

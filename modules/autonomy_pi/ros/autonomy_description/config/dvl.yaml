@@ -1,4 +1,4 @@
-nucleus_driver_node:
+nucleus_driver:
   ros__parameters:
     # Descriptions for all DVL configurations can be found in the Nucleus
     # documentation
@@ -12,9 +12,12 @@ nucleus_driver_node:
     # Specify a timeout for the DVL connection.
     timeout: 5 # seconds
 
-    # Specify the maximum number of connection attempts made. Set to -1
-    # to retry indefinitely.
+    # Specify the maximum number of connection attempts made during
+    # configuration. Set to -1 to retry indefinitely.
     max_retries: -1
+
+    # Specify the delay between DVL connection attempts.
+    retry_interval: 5.0 # seconds
 
     # The INS inertial frame is defined using the "North-East-Down" orientation positioned
     # at the point where the "start measurement" command is issued.

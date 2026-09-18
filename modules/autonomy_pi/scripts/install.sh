@@ -22,7 +22,7 @@ sudo apt-get update \
 
 # install ROS 2
 #
-# See the ROS installation instructions for further information:
+# see the ROS installation instructions for further information:
 # https://docs.ros.org/en/lyrical/Installation/Ubuntu-Install-Debs.html
 sudo apt update \
   && sudo apt install locales \
@@ -116,7 +116,8 @@ sudo chmod +x $AUTONOMY_PI/scripts/reset_ekf.sh \
 # this will get placed in the [all] section
 echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 
-# configure user access to the I2C devices
+# configure user access to the serial and I2C devices (the Teensy on /dev/ttyAMA0 and
+# the BME680 on /dev/i2c-1)
 #
 # note that Ubuntu Server 26.04 enables serial-getty@ttyAMA0.service by default, which
 # can result in /dev/ttyAMA0 being owned by root:tty and no group access despite running
@@ -126,7 +127,7 @@ echo "dtparam=uart0=on" | sudo tee -a /boot/firmware/config.txt > /dev/null
 # and disable it:
 #   sudo systemctl disable serial-getty@ttyAMA0.service
 #   sudo systemctl mask serial-getty@ttyAMA0.service
-sudo usermod -aG dialout $USER
+sudo usermod -aG dialout,i2c $USER
 
 # disable sysrq
 #
@@ -135,7 +136,15 @@ sudo usermod -aG dialout $USER
 # don't really feel like doing that :D
 echo 'kernel.sysrq=0' | sudo tee /etc/sysctl.d/99-disable-sysrq.conf
 
-# Configure systemd to run the ROS stack on boot
-# sudo cp $AUTONOMY_PI/scripts/launch.sh /usr/local/bin \
-#   && cp $AUTONOMY_PI/services/ros.service /etc/systemd/system \
-#   && sudo systemctl enable ros.service
+# configure systemd to run the ROS stack on boot
+#
+# this will need to be re-configured if the repository is ever moved
+sudo chmod +x $AUTONOMY_PI/scripts/ros_entrypoint.sh
+
+for unit in ros-core ros-estimation ros-controllers; do
+  sed -e "s|__REPO_ROOT__|$REPO_ROOT|g" -e "s|__USER__|$USER|g" $AUTONOMY_PI/services/$unit.service \
+    | sudo tee /etc/systemd/system/$unit.service > /dev/null
+done
+
+sudo systemctl daemon-reload \
+  && sudo systemctl enable ros-core.service ros-estimation.service ros-controllers.service

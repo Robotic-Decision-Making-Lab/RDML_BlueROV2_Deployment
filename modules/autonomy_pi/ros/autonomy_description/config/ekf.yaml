@@ -1,59 +1,73 @@
 vehicle_ekf:
-    ros__parameters:
-        frequency: 50.0
-        sensor_timeout: 1.0
-        publish_tf: true
+  ros__parameters:
+    frequency: 50.0
+    sensor_timeout: 2.0
+    publish_tf: true
 
-        odom_frame: odom
-        base_link_frame: base_link
-        world_frame: odom
+    odom_frame: odom
+    base_link_frame: base_link
+    world_frame: odom
 
-        twist0: /nucleus_driver/twist
-        twist0_config: [false, false, false,
-                        false, false, false,
-                         true,  true, false,
-                        false, false, false,
-                        false, false, false]
-        twist0_differential: false
-        twist0_relative: false
-        twist0_queue_size: 2
-        twist0_nodelay: true
+    twist0: /nucleus_driver/twist
+    twist0_config:
+      [
+        false, false, false,
+        false, false, false,
+         true,  true, false,
+        false, false, false,
+        false, false, false,
+      ]
+    twist0_differential: false
+    twist0_relative: false
+    twist0_queue_size: 7
+    twist0_nodelay: true
+    twist0_rejection_threshold: 2.0
 
-        pose0: /bar30/depth
-        pose0_config: [false, false,  true,
-                       false, false, false,
-                       false, false, false,
-                       false, false, false,
-                       false, false, false]
-        pose0_differential: false
-        pose0_relative: false
-        pose0_queue_size: 5
-        pose0_nodelay: true
+    pose0: /vehicle/depth
+    pose0_config:
+      [
+        false, false,  true,
+        false, false, false,
+        false, false, false,
+        false, false, false,
+        false, false, false,
+      ]
+    pose0_differential: false
+    pose0_relative: false
+    pose0_queue_size: 5
+    pose0_nodelay: true
+    pose0_rejection_threshold: 2.0
 
-        imu0: /vehicle/imu01
-        imu0_config: [false, false, false,
-                       true,  true,  true,
-                      false, false, false,
-                       true,  true,  true,
-                      false, false, false]
-        imu0_differential: false
-        imu0_relative: false
-        imu0_queue_size: 30
-        imu0_remove_gravitational_acceleration: true
-        imu0_nodelay: false
+    imu0: /vehicle/imu01
+    imu0_config:
+      [
+        false, false, false,
+         true,  true,  true,
+        false, false, false,
+         true,  true,  true,
+        false, false, false,
+      ]
+    imu0_differential: false
+    imu0_relative: false
+    imu0_queue_size: 30
+    imu0_remove_gravitational_acceleration: true
+    imu0_nodelay: false
 
-        process_noise_covariance: [0.1, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.1, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.1,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0, 0.02,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0, 0.02,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0, 0.02, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.2, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.2, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.2,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0, 0.02,  0.0,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0, 0.02,  0.0, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0, 0.02, 0.0, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.1, 0.0, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.1, 0.0,
-                                   0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.0,  0.0,  0.0,  0.0, 0.0, 0.0, 0.15]
+    process_noise_covariance:
+      [
+         0.1,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.1,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.1,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0, 0.02,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0, 0.02,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0, 0.02,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.2,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.2,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.2,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 0.02,  0.0,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 0.02,  0.0,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 0.02,  0.0,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.0,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.1,  0.0,
+         0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 0.15,
+      ]

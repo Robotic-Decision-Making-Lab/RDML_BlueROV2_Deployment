@@ -47,8 +47,7 @@ private:
   teensy_driver::Params params_;
 
   rclcpp_lifecycle::LifecyclePublisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
-
-  rclcpp::Publisher<autonomy_msgs::msg::ImuCalibrationStatus>::SharedPtr calib_pub_;
+  rclcpp_lifecycle::LifecyclePublisher<autonomy_msgs::msg::ImuCalibrationStatus>::SharedPtr calib_pub_;
 
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr start_cal_srv_;
   rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr save_cal_srv_;

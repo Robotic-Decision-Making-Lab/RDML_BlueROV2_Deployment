@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import math
 import select
 import sys
 import threading
@@ -16,6 +17,12 @@ ACCURACY_NAMES = {0: "Unreliable", 1: "Low", 2: "Medium", 3: "High"}
 
 def get_accuracy(level: int) -> str:
     return ACCURACY_NAMES.get(level, "?")
+
+
+def get_heading_accuracy(degrees: float | None, goal: float = 5.0) -> str:
+    if degrees is None:
+        return "?"
+    return f"{degrees:.1f} deg (goal <={goal:.0f})"
 
 
 class CalibrationTool(Node):
@@ -55,6 +62,11 @@ class CalibrationTool(Node):
 
     def accuracy(self, field: str) -> int:
         return getattr(self.status, field) if self.status is not None else 0
+
+    def heading_accuracy_deg(self) -> float | None:
+        if self.status is None:
+            return None
+        return math.degrees(self.status.orientation_accuracy_rad)
 
 
 def prompt(message: str) -> str:
@@ -108,7 +120,8 @@ def calibrate_accel(tool: CalibrationTool) -> None:
 
 def calibrate_gyro(tool: CalibrationTool) -> None:
     print("\n--- Gyroscope calibration ---")
-    print("Set the vehicle down on a stable surface and do not touch it.\n")
+    print("Set the vehicle down on a stable surface and do not touch it.")
+    _ = prompt("Press ENTER once the vehicle is settled: ")
 
     duration = 5
 
@@ -134,13 +147,16 @@ def calibrate_gyro(tool: CalibrationTool) -> None:
 def calibrate_compass(tool: CalibrationTool) -> None:
     print("\n--- Compass calibration ---")
     print("Rotate the vehicle about a fixed coordinate frame, covering a sphere.")
-    print("Press ENTER at any time to stop and check the calibration result.\n")
+    _ = prompt("Press ENTER once you are ready to start: ")
+    print("Press ENTER again at any time to stop and check the calibration result.\n")
 
     while True:
         while not wait_for_keypress(0.2):
             accuracy = tool.accuracy("magnetometer_accuracy")
+            heading = get_heading_accuracy(tool.heading_accuracy_deg())
             print(
-                f"\r  compass accuracy: {accuracy} ({get_accuracy(accuracy)})  \x1b[K",
+                f"\r  compass accuracy: {accuracy} ({get_accuracy(accuracy)})"
+                f"   heading accuracy: {heading}  \x1b[K",
                 end="",
                 flush=True,
             )
@@ -148,11 +164,13 @@ def calibrate_compass(tool: CalibrationTool) -> None:
 
         accuracy = tool.accuracy("magnetometer_accuracy")
         result = get_accuracy(accuracy)
+        heading = get_heading_accuracy(tool.heading_accuracy_deg())
+        summary = f"Compass accuracy is {result}, heading accuracy {heading}."
 
         if accuracy >= 2:
-            if prompt(f"Compass accuracy is {result}. Keep sweeping? [y/N] ") != "y":
+            if prompt(f"{summary} Keep sweeping? [y/N] ") != "y":
                 return
-        elif prompt(f"Compass accuracy is {result}. Keep sweeping? [Y/n] ") == "n":
+        elif prompt(f"{summary} Keep sweeping? [Y/n] ") == "n":
             return
 
 

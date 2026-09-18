@@ -36,7 +36,7 @@
     </joint>
 
     <joint name="${prefix}bno08x_joint" type="fixed">
-      <origin rpy="0 0 -1.57079633" xyz="0.029369 0.02235 -0.115472" />
+      <origin rpy="0 0 1.57079633" xyz="0.029369 0.02235 -0.115472" />
       <parent link="${prefix}base_link" />
       <child link="${prefix}bno08x" />
     </joint>
@@ -48,79 +48,37 @@
     </joint>
 
     <!-- Import T200 macro -->
-    <xacro:include
-            filename="$(find autonomy_description)/description/urdf/t200.urdf.xacro"
-        />
+    <xacro:include filename="$(find autonomy_description)/description/urdf/t200.urdf.xacro" />
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="true"
-            id="1"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="true" id="1">
       <origin rpy="-1.571 1.571 -1.047" xyz="0.09 -0.104 0.0" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="true"
-            id="2"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="true" id="2">
       <origin rpy="-1.571 1.571 -2.094" xyz="0.09 0.104 0.0" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="false"
-            id="3"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="false" id="3">
       <origin rpy="-1.571 1.571 1.047" xyz="-0.09 -0.104 0.0" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="false"
-            id="4"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="false" id="4">
       <origin rpy="-1.571 1.571 2.094" xyz="-0.09 0.104 0.0" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="true"
-            id="5"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="true" id="5">
       <origin rpy="0 0 0" xyz="0.12 -0.218 0.11" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="false"
-            id="6"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="false" id="6">
       <origin rpy="0 0 0" xyz="0.12 0.218 0.11" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="false"
-            id="7"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="false" id="7">
       <origin rpy="0 0 0" xyz="-0.12 -0.218 0.11" />
     </xacro:t200_urdf>
 
-    <xacro:t200_urdf
-            parent="${prefix}base_link"
-            prefix="${prefix}"
-            ccw="true"
-            id="8"
-        >
+    <xacro:t200_urdf parent="${prefix}base_link" prefix="${prefix}" ccw="true" id="8">
       <origin rpy="0 0 0" xyz="-0.12 0.218 0.11" />
     </xacro:t200_urdf>
 

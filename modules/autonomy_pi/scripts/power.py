@@ -34,7 +34,7 @@ if __name__ == "__main__":
 
     for device in args.device:
         pin = PINS[device]
-        chip = lgpio.gpiochip_open(4)
+        chip = lgpio.gpiochip_open(0)
         lgpio.gpio_claim_output(chip, pin)
         lgpio.gpio_write(chip, pin, 0 if args.state == "on" else 1)
         lgpio.gpiochip_close(chip)

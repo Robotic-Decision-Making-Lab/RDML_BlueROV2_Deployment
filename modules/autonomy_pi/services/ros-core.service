@@ -1,0 +1,18 @@
+[Unit]
+Description=Launch the core autonomy stack
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__USER__
+ExecStart=__REPO_ROOT__/modules/autonomy_pi/scripts/ros_entrypoint.sh ros2 launch autonomy_bringup core.launch.yaml
+ExecStartPost=__REPO_ROOT__/modules/autonomy_pi/scripts/ros_entrypoint.sh bash -c 'until ros2 node list --no-daemon --spin-time 3 | grep -q robot_state_publisher; do sleep 1; done'
+TimeoutStartSec=180
+KillSignal=SIGINT
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

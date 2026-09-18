@@ -21,7 +21,7 @@ Decision Making Lab's (RDML) BlueROV2.
 | Raspberry Pi 4, 16 GB (`bluerov_pi`)  | Raspberry Pi OS Lite (Bookworm) |
 | Raspberry Pi 5, 16 GB (`autonomy_pi`) | Ubuntu 26.04 Server             |
 | Teensy 4.0                            | Teensyduino                     |
-| NVIDIA Jetson Orin Nano               | Ubuntu 22.04                    |
+| NVIDIA Jetson Orin Nano               | Ubuntu 24.04                    |
 
 ### Additional Sensors
 
@@ -84,14 +84,14 @@ flowchart LR
 
 ## Networking
 
-| Device                         | IP Address      | Username  | Password         |
-| ------------------------------ | --------------- | --------- | ---------------- |
-| Raspberry Pi 4 (`bluerov_pi`)  | `192.168.2.2`   | `pi`      | `REDACTED`      |
-| Raspberry Pi 5 (`autonomy_pi`) | `192.168.2.3`   | `REDACTED` | `REDACTED`        |
-| Barlus Underwater Camera (New) | `192.168.2.20`  | `N/A`     | `N/A`            |
-| Barlus Underwater Camera (Old) | `192.168.2.11`  | `N/A`     | `N/A`            |
-| NVIDIA Jetson Orin Nano        | `192.168.55.1`  | `rdml`    | `REDACTED` |
-| Nortek Nucleus 1000            | `192.168.2.201` | `N/A`     | `REDACTED`         |
+| Device                         | IP Address      |
+| ------------------------------ | --------------- |
+| Raspberry Pi 4 (`bluerov_pi`)  | `192.168.2.2`   |
+| Raspberry Pi 5 (`autonomy_pi`) | `192.168.2.3`   |
+| NVIDIA Jetson Orin Nano        | `192.168.2.4`   |
+| Nortek Nucleus 1000            | `192.168.2.201` |
+| Barlus Underwater Camera (New) | `192.168.2.20`  |
+| Barlus Underwater Camera (Old) | `192.168.2.11`  |
 
 ---
 
@@ -126,7 +126,7 @@ flowchart LR
 ### BlueOS Configuration
 
 - ArduSub: vX.X.X <!-- TODO: confirm flashed version -->
-- BlueOS's MAVLink router is configured with an additional UDP endpoint, in the **MAVLink
+- BlueOS's MAVLink router is configured with an additional UDP endpoint (UDP Client), in the **MAVLink
   Endpoints** page, targeting `127.0.0.1:14755`. This mirrors the flight controller's MAVLink
   stream to the `mavros_node` container (`network_mode: host`), which listens on that port per
   its `fcu_url` in [`mavros.yaml`](modules/bluerov_pi/docker/mavros.yaml).
@@ -135,7 +135,8 @@ flowchart LR
 
 - ROS 2 Lyrical
 - MAVROS is loaded by default on the `bluerov_pi` via [service](modules/bluerov_pi/services/ros.service)
-- The control, state estimation, and other autonomy-level components can be configured and launched via [`autonomy_description`](modules/autonomy_pi/ros/autonomy_description), respectively and [`autonomy_bringup`](modules/autonomy_pi/ros/autonomy_bringup)
+- The core autonomy stack, including transforms, state estimation, and control
+  are loaded by default on the `autonomy_pi` via [service](modules/autonomy_pi/services/)
 
 ---
 
@@ -146,6 +147,7 @@ system dependencies, and systemd services:
 
 - `bluerov_pi`: [`modules/bluerov_pi/scripts/install.sh`](modules/bluerov_pi/scripts/install.sh)
 - `autonomy_pi`: [`modules/autonomy_pi/scripts/install.sh`](modules/autonomy_pi/scripts/install.sh)
+- `jetson`: [`modules/jetson/scripts/install.sh`](modules/jetson/scripts/install.sh)
 
 The Teensy firmware is built and flashed with [PlatformIO](https://platformio.org/):
 

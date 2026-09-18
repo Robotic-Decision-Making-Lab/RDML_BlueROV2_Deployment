@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <robot name="bluerov2" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="$(find autonomy_description)/description/urdf/bluerov2.urdf.xacro" />

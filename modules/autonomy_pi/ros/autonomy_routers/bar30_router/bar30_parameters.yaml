@@ -1,30 +1,30 @@
 bar30_interface:
-    incoming_topic:
-        type: string
-        read_only: true
-        default_value: ""
-        description: The MAVROS raw MAVLink message topic.
-        validation:
-            not_empty<>: null
+  incoming_topic:
+    type: string
+    read_only: true
+    default_value: ""
+    description: The MAVROS raw MAVLink message topic.
+    validation:
+      not_empty<>: null
 
-    outgoing_topic:
-        type: string
-        read_only: true
-        default_value: ""
-        description: The topic to publish depth estimates to.
-        validation:
-            not_empty<>: null
+  outgoing_topic:
+    type: string
+    read_only: true
+    default_value: ""
+    description: The topic to publish depth estimates to.
+    validation:
+      not_empty<>: null
 
-    frame_id:
-        type: string
-        read_only: true
-        default_value: "bar30_link"
-        description: The frame ID of the Bar 30 sensor.
-        validation:
-            not_empty<>: null
+  frame_id:
+    type: string
+    read_only: true
+    default_value: "bar30_link"
+    description: The frame ID of the Bar 30 sensor.
+    validation:
+      not_empty<>: null
 
-    fluid_density:
-        type: double
-        default_value: 997.0474 # kg/m^3
-        read_only: true
-        description: The fluid density.
+  fluid_density:
+    type: double
+    default_value: 997.0474 # kg/m^3
+    read_only: true
+    description: The fluid density.

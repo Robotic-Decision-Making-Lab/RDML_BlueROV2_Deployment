@@ -1,10 +1,7 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro
-        name="bluerov2_system"
-        params="prefix max_set_param_attempts:=^3"
-    >
+  <xacro:macro name="bluerov2_system" params="prefix max_set_param_attempts:=^3">
 
     <!-- BlueROV2 thruster system -->
     <ros2_control name="thruster_control_system" type="system">

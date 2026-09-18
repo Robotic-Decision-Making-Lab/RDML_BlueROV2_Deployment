@@ -1,0 +1,16 @@
+[Unit]
+Description=Launch the autonomy control stack
+After=network-online.target ros-core.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=__USER__
+ExecStart=__REPO_ROOT__/modules/autonomy_pi/scripts/ros_entrypoint.sh ros2 launch autonomy_bringup controllers.launch.py
+KillSignal=SIGINT
+TimeoutStopSec=30
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

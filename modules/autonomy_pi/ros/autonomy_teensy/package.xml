@@ -3,7 +3,7 @@
 <package format="3">
 
   <name>autonomy_teensy</name>
-  <version>0.1.0</version>
+  <version>0.2.1</version>
   <description>Decodes the Teensy's serial packet stream</description>
 
   <maintainer email="evanp922@gmail.com">Evan Palmer</maintainer>
