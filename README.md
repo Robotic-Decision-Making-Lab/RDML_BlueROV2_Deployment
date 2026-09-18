@@ -21,7 +21,7 @@ Decision Making Lab's (RDML) BlueROV2.
 | Raspberry Pi 4, 16 GB (`bluerov_pi`)  | Raspberry Pi OS Lite (Bookworm) |
 | Raspberry Pi 5, 16 GB (`autonomy_pi`) | Ubuntu 26.04 Server             |
 | Teensy 4.0                            | Teensyduino                     |
-| NVIDIA Jetson Orin Nano               | Ubuntu 22.04                    |
+| NVIDIA Jetson Orin Nano               | Ubuntu 24.04                    |
 
 ### Additional Sensors
 
