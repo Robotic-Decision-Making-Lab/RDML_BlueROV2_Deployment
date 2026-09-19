@@ -63,5 +63,5 @@ jobs:
         run: |
           prerelease=""
           case "${GITHUB_REF_NAME}" in *-*) prerelease="--prerelease" ;; esac
-          gh release create "${GITHUB_REF_NAME}" \
+          gh release create "${GITHUB_REF_NAME}" --title "v${GITHUB_REF_NAME#v}" \
             --generate-notes --verify-tag ${prerelease}
