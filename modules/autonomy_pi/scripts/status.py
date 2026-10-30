@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import errno
 import math
 import os
 import struct
@@ -97,8 +98,14 @@ def autopilot(msg: State | None) -> Row:
 def switches(chip: gpiod.Chip) -> list[Row]:
     # request the lines as-is, since reconfiguring a pin would toggle its device
     config = {tuple(PINS.values()): gpiod.LineSettings(direction=Direction.AS_IS)}
-    with chip.request_lines(config, consumer="vstat") as request:
-        values = {name: request.get_value(pin) for name, pin in PINS.items()}
+    try:
+        with chip.request_lines(config, consumer="vstat") as request:
+            values = {name: request.get_value(pin) for name, pin in PINS.items()}
+    except OSError as e:
+        # another process (e.g., power.py) holds a line, so try again next redraw
+        if e.errno != errno.EBUSY:
+            raise
+        return [Row(name, level=Level.WARN, status="BUSY") for name in PINS]
 
     # the switches are active low
     return [
