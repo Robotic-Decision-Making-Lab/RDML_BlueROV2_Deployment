@@ -92,6 +92,16 @@ sudo apt-get update \
   && echo "alias power='$AUTONOMY_PI/scripts/power.py'" >> ~/.bashrc \
   && source ~/.bashrc
 
+# setup the vehicle status display
+#
+# this reads the switch states with libgpiod, which (unlike lgpio) can read an output
+# pin without driving it
+sudo apt-get update \
+  && sudo apt-get install -y python3-libgpiod \
+  && sudo chmod +x $AUTONOMY_PI/scripts/status.py \
+  && echo "alias vstat='$AUTONOMY_PI/scripts/status.py'" >> ~/.bashrc \
+  && source ~/.bashrc
+
 # setup the pld monitor
 sudo apt-get update \
   && sudo apt-get install -y gpiod \
