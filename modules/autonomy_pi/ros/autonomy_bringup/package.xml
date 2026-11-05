@@ -3,7 +3,7 @@
 <package format="3">
 
   <name>autonomy_bringup</name>
-  <version>0.2.1</version>
+  <version>0.3.0</version>
   <description>Launch files for the autonomy Raspberry Pi 5</description>
 
   <maintainer email="evanp922@gmail.com">Evan Palmer</maintainer>

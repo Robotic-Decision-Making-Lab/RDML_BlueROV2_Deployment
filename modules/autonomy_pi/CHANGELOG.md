@@ -1,5 +1,10 @@
 # Changelog for module autonomy_pi
 
+## 0.3.0
+
+- Adds the `status.py` script and `vstat` alias to display the vehicle status.
+- Fixes the timestamp in the depth messages published by the Bar30 router.
+
 ## 0.2.1
 
 - Adds systemd services to run the state estimation and control stack on boot.

@@ -1,5 +1,7 @@
 # Changelog for module bluerov_pi
 
+## 0.3.0
+
 ## 0.2.1
 
 - Updates the installation script based on latest image.
