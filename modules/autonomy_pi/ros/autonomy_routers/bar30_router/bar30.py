@@ -74,8 +74,6 @@ class Bar30Router(Node):
         cov = ((0.2 * 100) ** 2) / self.params.fluid_density / -g
 
         msg = PoseWithCovarianceStamped()
-        # stamp with the local clock; the MAVROS stamp comes from the BlueROV Pi, whose
-        # clock is not synchronized with the EKF host
         msg.header.stamp = self.get_clock().now().to_msg()
         msg.header.frame_id = self.params.frame_id
         msg.pose.covariance[14] = cov
